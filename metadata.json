@@ -1,0 +1,5 @@
+{
+  "name": "GitHub Profile Extractor",
+  "description": "Extract and view full GitHub user profiles including READMEs and repositories.",
+  "requestFramePermissions": []
+}
