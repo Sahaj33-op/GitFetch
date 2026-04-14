@@ -49,16 +49,18 @@ export default function App() {
             
             <form onSubmit={handleSearch} className="w-full sm:w-auto relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                {loading ? <Loader2 className="h-5 w-5 text-blue-500 animate-spin" /> : <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />}
               </div>
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Enter GitHub username..."
-                className="block w-full sm:w-80 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
+                aria-label="Search GitHub username"
+                disabled={loading}
+                className="block w-full sm:w-80 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               />
-              <button type="submit" className="sr-only">Search</button>
+              <button type="submit" className="sr-only" disabled={loading}>Search</button>
             </form>
           </div>
         </div>

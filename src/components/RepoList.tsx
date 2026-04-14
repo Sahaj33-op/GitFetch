@@ -31,6 +31,7 @@ export function RepoList({ repos }: RepoListProps) {
               placeholder="Find a repository..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Find a repository"
               className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-64 outline-none transition-all"
             />
           </div>
