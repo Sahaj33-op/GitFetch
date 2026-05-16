@@ -10,110 +10,115 @@ interface GitHubProfileProps {
 
 export function GitHubProfile({ user, socials }: GitHubProfileProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
-      <div className="flex-shrink-0">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-100"></div>
+      
+      <div className="relative mt-4 mb-4">
         <img
           src={user.avatar_url}
           alt={`${user.login}'s avatar`}
-          className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-gray-50 shadow-sm"
+          className="w-32 h-32 rounded-full border-4 border-white shadow-md bg-white"
           referrerPolicy="no-referrer"
         />
       </div>
       
-      <div className="flex-grow w-full">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{user.name || user.login}</h1>
-            <a 
-              href={user.html_url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-xl text-gray-500 hover:text-blue-600 transition-colors"
-            >
-              @{user.login}
-            </a>
+      <div className="w-full relative z-10">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">{user.name || user.login}</h1>
+        <a 
+          href={user.html_url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-base text-gray-500 hover:text-blue-600 transition-colors font-medium mb-4 inline-block"
+        >
+          @{user.login}
+        </a>
+
+        {user.bio && (
+          <p className="text-gray-700 text-sm mb-6 leading-relaxed">
+            {user.bio}
+          </p>
+        )}
+
+        <div className="flex justify-center gap-6 mb-6 text-sm text-gray-600 border-y border-gray-100 py-4 w-full">
+          <div className="flex flex-col items-center">
+            <span className="font-bold text-gray-900 text-lg">{user.followers.toLocaleString()}</span> 
+            <span className="text-gray-500 text-xs uppercase tracking-wider font-semibold">Followers</span>
           </div>
+          <div className="w-px bg-gray-100"></div>
+          <div className="flex flex-col items-center">
+            <span className="font-bold text-gray-900 text-lg">{user.following.toLocaleString()}</span> 
+            <span className="text-gray-500 text-xs uppercase tracking-wider font-semibold">Following</span>
+          </div>
+        </div>
+
+        <div className="w-full flex justify-center mb-6">
           <a
             href={user.html_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium text-sm shadow-sm"
           >
             View on GitHub
           </a>
         </div>
 
-        {user.bio && (
-          <p className="text-gray-700 text-lg mb-6 max-w-3xl leading-relaxed mx-auto md:mx-0">
-            {user.bio}
-          </p>
-        )}
-
-        <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6 text-sm text-gray-600">
-          <div className="flex items-center gap-1.5 font-medium text-gray-900">
-            <Users className="w-4 h-4 text-gray-500" />
-            <span>{user.followers.toLocaleString()}</span> <span className="text-gray-500 font-normal">followers</span>
-            <span className="mx-1 text-gray-300">•</span>
-            <span>{user.following.toLocaleString()}</span> <span className="text-gray-500 font-normal">following</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm text-gray-600">
+        <div className="flex flex-col gap-y-3 text-sm text-gray-600 w-full text-left bg-gray-50/50 p-4 rounded-xl border border-gray-100">
           {user.company && (
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <Building className="w-4 h-4" />
-              <span>{user.company}</span>
+            <div className="flex items-center gap-3">
+              <Building className="w-4 h-4 text-gray-400 shrink-0" />
+              <span className="truncate" title={user.company}>{user.company}</span>
             </div>
           )}
           {user.location && (
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <MapPin className="w-4 h-4" />
-              <span>{user.location}</span>
+            <div className="flex items-center gap-3">
+              <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+              <span className="truncate" title={user.location}>{user.location}</span>
             </div>
           )}
           {user.blog && (
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <LinkIcon className="w-4 h-4" />
+            <div className="flex items-center gap-3">
+              <LinkIcon className="w-4 h-4 text-gray-400 shrink-0" />
               <a 
                 href={user.blog.startsWith('http') ? user.blog : `https://${user.blog}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 hover:underline truncate max-w-[200px]"
+                className="hover:text-blue-600 hover:underline truncate"
+                title={user.blog}
               >
                 {user.blog}
               </a>
             </div>
           )}
           {user.twitter_username && (
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <Twitter className="w-4 h-4" />
+            <div className="flex items-center gap-3">
+              <Twitter className="w-4 h-4 text-gray-400 shrink-0" />
               <a 
                 href={`https://twitter.com/${user.twitter_username}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="hover:text-blue-600 hover:underline"
+                className="hover:text-blue-600 hover:underline truncate"
               >
                 @{user.twitter_username}
               </a>
             </div>
           )}
-          <div className="flex items-center justify-center md:justify-start gap-2">
-            <Calendar className="w-4 h-4" />
-            <span>Joined {format(new Date(user.created_at), 'MMMM yyyy')}</span>
+          <div className="flex items-center gap-3">
+            <Calendar className="w-4 h-4 text-gray-400 shrink-0" />
+            <span className="truncate">Joined {format(new Date(user.created_at), 'MMMM yyyy')}</span>
           </div>
           
           {socials.map((social) => (
-            <div key={social.url} className="flex items-center justify-center md:justify-start gap-2">
-              <Globe className="w-4 h-4" />
-              <a 
-                href={social.url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-blue-600 hover:underline capitalize truncate max-w-[200px]"
-              >
-                {social.provider}
-              </a>
-            </div>
+             <div key={social.url} className="flex items-center gap-3">
+               <Globe className="w-4 h-4 text-gray-400 shrink-0" />
+               <a 
+                 href={social.url} 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 className="hover:text-blue-600 hover:underline capitalize truncate"
+               >
+                 {social.provider}
+               </a>
+             </div>
           ))}
         </div>
       </div>

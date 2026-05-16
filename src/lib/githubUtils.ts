@@ -24,9 +24,22 @@ export function calculateLanguageStats(repos: GitHubRepo[]) {
 export function filterAndSortRepos(
   repos: GitHubRepo[],
   searchQuery: string,
-  sortBy: 'stars' | 'updated'
+  sortBy: 'stars' | 'updated',
+  repoType: 'all' | 'personal' | 'org',
+  username: string,
+  language: string = 'all'
 ) {
   let result = repos.filter(repo => !repo.fork);
+
+  if (repoType === 'personal') {
+    result = result.filter(repo => !repo.owner || repo.owner.login.toLowerCase() === username.toLowerCase());
+  } else if (repoType === 'org') {
+    result = result.filter(repo => repo.owner && repo.owner.login.toLowerCase() !== username.toLowerCase());
+  }
+
+  if (language && language !== 'all') {
+    result = result.filter(repo => repo.language === language);
+  }
 
   if (searchQuery) {
     const query = searchQuery.toLowerCase();

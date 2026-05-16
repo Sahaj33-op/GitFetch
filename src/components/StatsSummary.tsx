@@ -15,49 +15,61 @@ export function StatsSummary({ repos }: StatsSummaryProps) {
   if (stats.repoCount === 0) return null;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-yellow-50 rounded-lg">
-            <Star className="w-5 h-5 text-yellow-600" />
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group">
+        <div className="absolute -right-4 -top-4 w-16 h-16 bg-yellow-50 rounded-full transition-transform group-hover:scale-150"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-yellow-100/50 rounded-xl text-yellow-600">
+              <Star className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-semibold tracking-wide text-gray-500 uppercase">Total Stars</span>
           </div>
-          <span className="text-sm font-medium text-gray-500">Total Stars</span>
+          <div className="text-3xl font-bold text-gray-900 tracking-tight">{stats.totalStars.toLocaleString()}</div>
         </div>
-        <div className="text-2xl font-bold text-gray-900">{stats.totalStars.toLocaleString()}</div>
       </div>
 
-      <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <GitFork className="w-5 h-5 text-blue-600" />
+      <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group">
+        <div className="absolute -right-4 -top-4 w-16 h-16 bg-blue-50 rounded-full transition-transform group-hover:scale-150"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-blue-100/50 rounded-xl text-blue-600">
+              <GitFork className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-semibold tracking-wide text-gray-500 uppercase">Total Forks</span>
           </div>
-          <span className="text-sm font-medium text-gray-500">Total Forks</span>
+          <div className="text-3xl font-bold text-gray-900 tracking-tight">{stats.totalForks.toLocaleString()}</div>
         </div>
-        <div className="text-2xl font-bold text-gray-900">{stats.totalForks.toLocaleString()}</div>
       </div>
 
-      <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-purple-50 rounded-lg">
-            <Code2 className="w-5 h-5 text-purple-600" />
+      <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group">
+        <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-50 rounded-full transition-transform group-hover:scale-150"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-purple-100/50 rounded-xl text-purple-600">
+              <Code2 className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-semibold tracking-wide text-gray-500 uppercase">Source Repos</span>
           </div>
-          <span className="text-sm font-medium text-gray-500">Source Repos</span>
+          <div className="text-3xl font-bold text-gray-900 tracking-tight">{stats.repoCount}</div>
         </div>
-        <div className="text-2xl font-bold text-gray-900">{stats.repoCount}</div>
       </div>
 
-      <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 bg-green-50 rounded-lg">
-            <Trophy className="w-5 h-5 text-green-600" />
+      <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden group">
+        <div className="absolute -right-4 -top-4 w-16 h-16 bg-emerald-50 rounded-full transition-transform group-hover:scale-150"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-emerald-100/50 rounded-xl text-emerald-600">
+              <Trophy className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-semibold tracking-wide text-gray-500 uppercase">Top Project</span>
           </div>
-          <span className="text-sm font-medium text-gray-500">Top Project</span>
-        </div>
-        <div className="text-sm font-bold text-gray-900 truncate">
-          {stats.mostPopular?.name || 'N/A'}
-        </div>
-        <div className="text-xs text-gray-500 mt-1">
-          {stats.mostPopular?.stargazers_count.toLocaleString()} stars
+          <div className="text-base font-bold text-gray-900 truncate tracking-tight" title={stats.mostPopular?.name || ''}>
+            {stats.mostPopular?.name || 'N/A'}
+          </div>
+          <div className="text-xs font-medium text-emerald-600 mt-1 uppercase tracking-widest">
+            {stats.mostPopular?.stargazers_count.toLocaleString()} stars
+          </div>
         </div>
       </div>
     </div>

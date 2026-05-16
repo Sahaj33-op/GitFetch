@@ -1,5 +1,6 @@
 import React from 'react';
 import { GitHubOrg } from '../lib/github';
+import { Building2 } from 'lucide-react';
 
 interface OrganizationsProps {
   orgs: GitHubOrg[];
@@ -9,8 +10,11 @@ export function Organizations({ orgs }: OrganizationsProps) {
   if (orgs.length === 0) return null;
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-full">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Organizations</h3>
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full">
+      <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+        <Building2 className="w-5 h-5 text-gray-400" />
+        Organizations
+      </h3>
       <div className="flex flex-wrap gap-4">
         {orgs.map(org => (
           <a
@@ -18,18 +22,16 @@ export function Organizations({ orgs }: OrganizationsProps) {
             href={`https://github.com/${org.login}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative"
+            className="group relative flex items-center gap-3 p-2 pr-4 rounded-xl border border-gray-100 hover:border-blue-500 hover:bg-blue-50/50 transition-all"
             title={org.login}
           >
             <img
               src={org.avatar_url}
               alt={org.login}
-              className="w-12 h-12 rounded-lg border border-gray-100 group-hover:border-blue-500 transition-colors"
+              className="w-10 h-10 rounded-lg shadow-sm bg-white"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
-              {org.login}
-            </div>
+            <span className="text-sm font-semibold text-gray-700 group-hover:text-blue-700">{org.login}</span>
           </a>
         ))}
       </div>

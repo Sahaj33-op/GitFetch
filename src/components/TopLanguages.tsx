@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { GitHubRepo } from '../lib/github';
 import { calculateLanguageStats } from '../lib/githubUtils';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart as PieChartIcon } from 'lucide-react';
 
 interface TopLanguagesProps {
   repos: GitHubRepo[];
@@ -22,11 +23,14 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
   if (allLanguages.length === 0) return null;
 
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-full flex flex-col">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Languages</h3>
+    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full flex flex-col">
+      <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-6">
+        <PieChartIcon className="w-5 h-5 text-gray-400" />
+        Languages
+      </h3>
       
-      <div className="flex flex-col md:flex-row gap-8 items-center">
-        <div className="w-full md:w-1/2 h-[250px]">
+      <div className="flex flex-col xl:flex-row gap-8 items-center flex-1">
+        <div className="w-full xl:w-1/2 h-[200px] xl:h-[250px] shrink-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -37,28 +41,30 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
                 outerRadius={80}
                 paddingAngle={5}
                 dataKey="value"
+                stroke="none"
               >
                 {chartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip 
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)' }}
+                itemStyle={{ color: '#111827', fontWeight: 500 }}
               />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="w-full md:w-1/2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
-            {allLanguages.map((lang, index) => (
-              <div key={lang.name} className="flex items-center gap-2 text-sm">
+        <div className="w-full xl:w-1/2">
+          <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+            {allLanguages.slice(0, 10).map((lang, index) => (
+              <div key={lang.name} className="flex items-center gap-3 text-sm">
                 <span 
-                  className="w-3 h-3 rounded-full flex-shrink-0" 
-                  style={{ backgroundColor: index < COLORS.length ? COLORS[index] : '#cbd5e1' }}
+                  className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" 
+                  style={{ backgroundColor: index < COLORS.length ? COLORS[index] : '#e2e8f0' }}
                 ></span>
-                <span className="text-gray-700 font-medium truncate">{lang.name}</span>
-                <span className="text-gray-400 text-xs ml-auto">{lang.value}</span>
+                <span className="text-gray-700 font-medium truncate flex-1">{lang.name}</span>
+                <span className="text-gray-400 text-xs font-semibold">{lang.value}</span>
               </div>
             ))}
           </div>

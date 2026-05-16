@@ -1,3 +1,0 @@
-## 2024-04-14 - Inline Loading Feedback & Form Accessibility
-**Learning:** Adding immediate inline feedback (like swapping an icon for a spinner) inside the input itself provides a smoother experience than just a global page loader, especially for search forms. Disabling inputs during async operations prevents duplicate submissions but requires visual cues (opacity, cursor) so the user understands the state.
-**Action:** Always pair `disabled` states with visual feedback (opacity changes, loading spinners) and ensure inputs have explicit `aria-label`s for screen readers when visible labels are omitted.

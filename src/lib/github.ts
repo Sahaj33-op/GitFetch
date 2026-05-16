@@ -44,12 +44,77 @@ export interface GitHubRepo {
   updated_at: string;
   homepage: string | null;
   topics: string[];
+  owner: {
+    login: string;
+    avatar_url: string;
+  };
+  created_at: string;
+}
+
+export interface GitHubEvent {
+  id: string;
+  type: string;
+  actor: {
+    id: number;
+    login: string;
+    avatar_url: string;
+  };
+  repo: {
+    id: number;
+    name: string;
+    url: string;
+  };
+  payload: any;
+  created_at: string;
 }
 
 const GITHUB_API_BASE = 'https://api.github.com';
 
-export async function fetchUser(username: string): Promise<GitHubUser> {
-  const res = await fetch(`${GITHUB_API_BASE}/users/${username}`);
+const getHeaders = (token?: string) => {
+  const headers: Record<string, string> = {
+    Accept: 'application/vnd.github.v3+json',
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+};
+
+export async function isAuthUser(username: string, token?: string): Promise<boolean> {
+  if (!token) return false;
+  try {
+    const res = await fetch(`${GITHUB_API_BASE}/user`, { 
+      headers: getHeaders(token), 
+      cache: 'no-store' 
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.login.toLowerCase() === username.toLowerCase();
+    }
+  } catch (e) {
+    // ignore
+  }
+  return false;
+}
+
+export async function fetchEvents(username: string, token?: string, isAuth?: boolean): Promise<GitHubEvent[]> {
+  const endpoint = isAuth ? `/users/${username}/events` : `/users/${username}/events/public`;
+  const res = await fetch(`${GITHUB_API_BASE}${endpoint}?per_page=30`, { 
+    headers: getHeaders(token),
+    cache: 'no-store' 
+  });
+  if (!res.ok) {
+    return []; // Suppress errors for events to maintain rest of the profile
+  }
+  return res.json();
+}
+
+export async function fetchUser(username: string, token?: string, isAuth?: boolean): Promise<GitHubUser> {
+  const endpoint = isAuth ? '/user' : `/users/${username}`;
+  const res = await fetch(`${GITHUB_API_BASE}${endpoint}`, { 
+    headers: getHeaders(token),
+    cache: 'no-store' 
+  });
   if (!res.ok) {
     if (res.status === 404) throw new Error('User not found');
     if (res.status === 403) throw new Error('API rate limit exceeded. Please try again later.');
@@ -58,13 +123,19 @@ export async function fetchUser(username: string): Promise<GitHubUser> {
   return res.json();
 }
 
-export async function fetchRepos(username: string): Promise<GitHubRepo[]> {
+export async function fetchRepos(username: string, token?: string, isAuth?: boolean): Promise<GitHubRepo[]> {
   let allRepos: GitHubRepo[] = [];
   let page = 1;
   let hasMore = true;
 
-  while (hasMore && page <= 3) { // Limit to 3 pages (300 repos) to avoid hitting rate limits too hard
-    const res = await fetch(`${GITHUB_API_BASE}/users/${username}/repos?per_page=100&page=${page}&sort=pushed`);
+  const endpoint = isAuth ? '/user/repos' : `/users/${username}/repos`;
+  const extraParams = isAuth ? '&affiliation=owner,collaborator,organization_member' : '';
+
+  while (hasMore && page <= 5) { // Limit to 5 pages (500 repos) to avoid hitting rate limits too hard
+    const res = await fetch(`${GITHUB_API_BASE}${endpoint}?per_page=100&page=${page}&sort=pushed${extraParams}`, { 
+      headers: getHeaders(token),
+      cache: 'no-store' 
+    });
     if (!res.ok) {
       if (res.status === 403) throw new Error('API rate limit exceeded.');
       throw new Error('Failed to fetch repositories');
@@ -82,12 +153,14 @@ export async function fetchRepos(username: string): Promise<GitHubRepo[]> {
   return allRepos;
 }
 
-export async function fetchUserReadme(username: string): Promise<string | null> {
+export async function fetchUserReadme(username: string, token?: string): Promise<string | null> {
   try {
+    const headers = getHeaders(token);
+    headers.Accept = 'application/vnd.github.v3.raw';
+    
     const res = await fetch(`${GITHUB_API_BASE}/repos/${username}/${username}/readme`, {
-      headers: {
-        Accept: 'application/vnd.github.v3.raw',
-      },
+      headers,
+      cache: 'no-store',
     });
     
     if (!res.ok) {
@@ -100,14 +173,38 @@ export async function fetchUserReadme(username: string): Promise<string | null> 
   }
 }
 
-export async function fetchOrgs(username: string): Promise<GitHubOrg[]> {
-  const res = await fetch(`${GITHUB_API_BASE}/users/${username}/orgs`);
+export async function fetchOrgs(username: string, token?: string, isAuth?: boolean): Promise<GitHubOrg[]> {
+  const endpoint = isAuth ? '/user/orgs' : `/users/${username}/orgs`;
+  const res = await fetch(`${GITHUB_API_BASE}${endpoint}`, { 
+    headers: getHeaders(token),
+    cache: 'no-store' 
+  });
   if (!res.ok) return [];
   return res.json();
 }
 
-export async function fetchSocialAccounts(username: string): Promise<GitHubSocialAccount[]> {
-  const res = await fetch(`${GITHUB_API_BASE}/users/${username}/social_accounts`);
+export async function fetchSocialAccounts(username: string, token?: string): Promise<GitHubSocialAccount[]> {
+  const res = await fetch(`${GITHUB_API_BASE}/users/${username}/social_accounts`, { 
+    headers: getHeaders(token),
+    cache: 'no-store' 
+  });
   if (!res.ok) return [];
   return res.json();
 }
+
+export async function fetchOrgRepos(orgLogin: string, token?: string): Promise<GitHubRepo[]> {
+  const res = await fetch(`${GITHUB_API_BASE}/orgs/${orgLogin}/repos?type=all&per_page=100&sort=pushed`, { 
+    headers: getHeaders(token),
+    cache: 'no-store' 
+  });
+  if (!res.ok) {
+    let msg = await res.text();
+    try {
+      const json = JSON.parse(msg);
+      if (json.message) msg = json.message;
+    } catch (e) {}
+    throw new Error(`${res.status} - ${msg}`);
+  }
+  return res.json();
+}
+
