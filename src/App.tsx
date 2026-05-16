@@ -15,6 +15,7 @@ import { useGitHubProfile } from './hooks/useGitHubProfile';
 function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: string, token: string) => void, initialValue?: string }) {
   const [searchInput, setSearchInput] = useState(initialValue);
   const [tokenInput, setTokenInput] = useState('');
+  const [showToken, setShowToken] = useState(false);
 
   useEffect(() => {
     setSearchInput(initialValue);
@@ -27,38 +28,77 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 relative group">
-      <div className="relative flex-grow">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+    <form onSubmit={handleSubmit} className="w-full md:w-auto flex flex-col md:flex-row gap-2 relative">
+      <div className="flex w-full gap-2 md:w-auto">
+        <div className="relative flex-grow">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 md:h-4 md:w-4 text-gray-400 transition-colors" />
+          </div>
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="GitHub username..."
+            aria-label="GitHub username"
+            className="block w-full md:w-56 lg:w-64 pl-10 pr-3 py-2.5 md:py-2 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-base md:text-sm"
+          />
         </div>
-        <input
-          type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder="GitHub username..."
-          aria-label="GitHub username"
-          className="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
-        />
+        <button 
+          type="button"
+          onClick={() => setShowToken(!showToken)}
+          className={`md:hidden flex flex-shrink-0 items-center justify-center px-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 ${showToken ? 'bg-gray-200' : 'bg-gray-50 text-gray-600'}`}
+          aria-label="Toggle token input"
+        >
+          <Key className="w-5 h-5" />
+        </button>
+        <button 
+          type="submit" 
+          className="md:hidden flex flex-shrink-0 items-center justify-center px-4 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
+          aria-label="Extract Profile"
+        >
+          <Search className="w-5 h-5" />
+        </button>
       </div>
-      <div className="relative flex-grow group/token">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Key className="h-4 w-4 text-gray-400 group-focus-within/token:text-blue-500 transition-colors" />
+
+      <div className={`${showToken ? 'flex' : 'hidden'} md:flex flex-col md:flex-row gap-2 w-full md:w-auto`}>
+        <div className="relative flex-grow group/token">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Key className="h-4 w-4 text-gray-400 group-focus-within/token:text-blue-500 transition-colors" />
+          </div>
+          <input
+            type="password"
+            value={tokenInput}
+            onChange={(e) => setTokenInput(e.target.value)}
+            placeholder="PAT (optional)"
+            aria-label="GitHub Personal Access Token (optional)"
+            className="block w-full md:w-44 lg:w-48 pl-9 pr-3 py-2.5 md:py-2 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-base md:text-sm"
+          />
+          
+          {/* Desktop Tooltip */}
+          <div className="hidden md:block absolute top-[calc(100%+0.5rem)] right-0 w-72 p-4 bg-gray-900 border border-gray-700 text-white text-xs rounded-lg opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-50 shadow-xl">
+            <div className="absolute -top-2 right-6 w-4 h-4 bg-gray-900 border-t border-l border-gray-700 transform rotate-45"></div>
+            <p className="font-semibold mb-1 text-sm">Personal Access Token</p>
+            <p className="text-gray-300 leading-relaxed mb-3">Add a GitHub PAT to increase rate limits and fetch private repositories.</p>
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5">
+              <p className="text-amber-200 font-medium leading-tight">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
+            </div>
+          </div>
         </div>
-        <input
-          type="password"
-          value={tokenInput}
-          onChange={(e) => setTokenInput(e.target.value)}
-          placeholder="PAT (optional)"
-          aria-label="GitHub Personal Access Token (optional)"
-          className="block w-full sm:w-48 pl-9 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
-        />
-        <div className="absolute top-full mt-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-20 tooltip">
-          <p className="font-semibold mb-1">Personal Access Token</p>
-          <p className="text-gray-300">Add a GitHub PAT to increase rate limits, fetch private repositories, and load SAML/SSO organization data.</p>
+        
+        {/* Mobile token note */}
+        <div className="md:hidden text-xs text-gray-600 bg-amber-50 border border-amber-200 p-3 rounded-lg w-full">
+          <p className="font-semibold text-amber-800 mb-1 text-sm">PAT Token (Optional)</p>
+          <p className="mb-2">Increases rate limits & fetches private repos.</p>
+          <p className="font-medium text-amber-700">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
         </div>
+        
+        <button 
+          type="submit" 
+          className="hidden md:flex items-center justify-center gap-2 px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
+        >
+          <span className="text-sm">Extract</span>
+        </button>
       </div>
-      <button type="submit" className="sr-only">Search</button>
     </form>
   );
 }
@@ -162,11 +202,11 @@ export default function App() {
 
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
             <div className="flex items-center gap-2">
-              <Github className="w-8 h-8 text-gray-900" />
-              <span className="text-xl font-bold tracking-tight">GitHub Profile Extractor</span>
+              <Github className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
+              <span className="text-lg md:text-xl font-bold tracking-tight">GitHub Profile Extractor</span>
             </div>
             
             <SearchForm onSearch={handleSearch} initialValue={searchParams.username} />
@@ -175,7 +215,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {!searchParams.username && !loading && !error && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">

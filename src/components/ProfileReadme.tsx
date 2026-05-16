@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import 'github-markdown-css/github-markdown-light.css';
 import { Eye, Code } from 'lucide-react';
 
 interface ProfileReadmeProps {
