@@ -13,6 +13,9 @@
 
 [Explore Features](#sparkles-features) • [Installation](#gear-getting-started) • [Usage](#rocket-usage)
 
+<br />
+<img src="./public/screenshot.png" alt="GitHub Profile Extractor Dashboard" width="100%" />
+
 </div>
 
 ---
