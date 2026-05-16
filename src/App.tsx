@@ -12,6 +12,8 @@ import { ExportModal } from './components/ExportModal';
 import { generateMarkdown, downloadMarkdown, MarkdownExportOptions } from './lib/markdownExport';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
 
+import { LandingContent } from './components/LandingContent';
+
 function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: string, token: string) => void, initialValue?: string }) {
   const [searchInput, setSearchInput] = useState(initialValue);
   const [tokenInput, setTokenInput] = useState('');
@@ -78,7 +80,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
           <div className="hidden md:block absolute top-[calc(100%+0.5rem)] right-0 w-72 p-4 bg-gray-900 border border-gray-700 text-white text-xs rounded-lg opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-50 shadow-xl">
             <div className="absolute -top-2 right-6 w-4 h-4 bg-gray-900 border-t border-l border-gray-700 transform rotate-45"></div>
             <p className="font-semibold mb-1 text-sm">Personal Access Token</p>
-            <p className="text-gray-300 leading-relaxed mb-3">Add a GitHub PAT to increase rate limits and fetch private repositories.</p>
+            <p className="text-gray-300 leading-relaxed mb-3">Add a GitHub PAT to increase rate limits, fetch private repositories, organizations and contributions.</p>
             <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5">
               <p className="text-amber-200 font-medium leading-tight">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
             </div>
@@ -88,7 +90,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
         {/* Mobile token note */}
         <div className="md:hidden text-xs text-gray-600 bg-amber-50 border border-amber-200 p-3 rounded-lg w-full">
           <p className="font-semibold text-amber-800 mb-1 text-sm">PAT Token (Optional)</p>
-          <p className="mb-2">Increases rate limits & fetches private repos.</p>
+          <p className="mb-2">Increases rate limits & fetches private repos, orgs & contributions.</p>
           <p className="font-medium text-amber-700">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
         </div>
         
@@ -217,15 +219,7 @@ export default function App() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {!searchParams.username && !loading && !error && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-              <Github className="w-12 h-12 text-gray-400" />
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">Search for a GitHub User</h2>
-            <p className="text-gray-500 max-w-md">
-              Enter a GitHub username above to extract their full profile, including their README, repositories, and stats.
-            </p>
-          </div>
+          <LandingContent />
         )}
 
         {loading && (
