@@ -1,20 +1,46 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# GitHub Profile Extractor
 
-# Run and deploy your AI Studio app
+A modern, responsive web application that extracts and beautifully visualizes GitHub user profiles. Built with React, TypeScript, and Tailwind CSS.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/65d63c1c-59de-44e6-8843-c11349cb4166
+- **Profile Dashboard:** Get a comprehensive view of any GitHub user by simply entering their username.
+- **Stats Summary:** Quick insights into total stars, forks, repository count, and top projects.
+- **Top Languages:** Visual representation of the most used programming languages across repositories.
+- **Recent Activity:** A timeline of recent GitHub events including pushes, pull requests, issues, and more.
+- **Profile README:** beautifully rendered Markdown support for users' profile READMEs.
+- **Repository List:** Browse, search, and sort public repositories with details like language, stars, forks, and project start dates.
+- **Markdown Export:** Export the entire profile dashboard (including stats, languages, activity, and repositories) into a clean, well-formatted Markdown document.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Framework:** React 19 + Vite
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS V4
+- **Icons:** Lucide React
+- **Charts:** Recharts
+- **Markdown Rendering:** React Markdown with GFM and raw HTML support
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+3. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+## Usage
+
+1. Open the application in your browser.
+2. Enter any GitHub username in the search bar.
+3. Explore the loaded profile, including their stats, languages, recent activity, and repositories.
+4. Click the "Export Markdown" button to download or copy the profile summarized in Markdown format.
