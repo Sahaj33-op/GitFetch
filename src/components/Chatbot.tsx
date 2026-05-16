@@ -198,9 +198,15 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
   }
 
   return (
-    <div className={`fixed right-0 md:right-6 bottom-0 md:bottom-6 w-full md:w-[450px] bg-white md:rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 border border-gray-200 transition-all duration-300 ease-in-out ${isMinimized ? 'h-16' : 'h-[85vh] md:h-[650px] max-h-[800px]'}`}>
+    <div className={`fixed z-50 bg-white shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ease-in-out border border-gray-200
+      ${isMinimized 
+        ? 'right-0 bottom-0 w-full h-16 md:right-6 md:bottom-6 md:w-[450px] rounded-t-2xl md:rounded-2xl' 
+        : 'inset-0 w-full h-[100dvh] md:inset-auto md:right-6 md:bottom-6 md:w-[450px] md:h-[650px] md:max-h-[800px] md:rounded-2xl'
+      }`}>
       {/* Header */}
-      <div className="bg-gray-900 text-white p-4 flex items-center justify-between shrink-0 cursor-pointer" onClick={() => setIsMinimized(!isMinimized)}>
+      <div className="bg-gray-900 text-white flex items-center justify-between shrink-0 cursor-pointer" 
+           style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))', paddingBottom: '1rem', paddingLeft: '1rem', paddingRight: '1rem' }}
+           onClick={() => setIsMinimized(!isMinimized)}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
@@ -357,7 +363,8 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-200 shrink-0">
+          <form onSubmit={handleSubmit} className="bg-white border-t border-gray-200 shrink-0"
+                style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))', paddingTop: '1rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
             <div className="relative">
               <input
                 type="text"
