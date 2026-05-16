@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Search, Github, Loader2, AlertCircle, Download, Copy, Check, Key } from 'lucide-react';
 import { GitHubProfile } from './components/GitHubProfile';
 import { ProfileReadme } from './components/ProfileReadme';
@@ -11,9 +12,13 @@ import { ExportModal } from './components/ExportModal';
 import { generateMarkdown, downloadMarkdown, MarkdownExportOptions } from './lib/markdownExport';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
 
-function SearchForm({ onSearch }: { onSearch: (username: string, token: string) => void }) {
-  const [searchInput, setSearchInput] = useState('');
+function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: string, token: string) => void, initialValue?: string }) {
+  const [searchInput, setSearchInput] = useState(initialValue);
   const [tokenInput, setTokenInput] = useState('');
+
+  useEffect(() => {
+    setSearchInput(initialValue);
+  }, [initialValue]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,11 +64,28 @@ function SearchForm({ onSearch }: { onSearch: (username: string, token: string) 
 }
 
 export default function App() {
-  const [searchParams, setSearchParams] = useState({ username: '', token: '' });
+  const getInitialParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      username: params.get('username') || '',
+      token: ''
+    };
+  };
+
+  const [searchParams, setSearchParams] = useState(getInitialParams());
   const [copied, setCopied] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   
   const { user, repos, readme, orgs, socials, events, loading, error, warnings } = useGitHubProfile(searchParams.username, searchParams.token);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      setSearchParams(prev => ({ ...prev, username: params.get('username') || '' }));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleCopyMarkdown = async (options: MarkdownExportOptions) => {
     if (!user) return;
@@ -81,10 +103,63 @@ export default function App() {
 
   const handleSearch = (username: string, token: string) => {
     setSearchParams({ username, token });
+    const url = new URL(window.location.href);
+    if (username) {
+      url.searchParams.set('username', username);
+    } else {
+      url.searchParams.delete('username');
+    }
+    window.history.pushState({}, '', url);
   };
+
+  const seoTitle = user 
+    ? `${user.name || user.login}'s GitHub Profile | GitHub Profile Extractor` 
+    : 'GitHub Profile Extractor';
+  const seoDescription = user 
+    ? (user.bio ? user.bio.substring(0, 160) : `View ${user.name || user.login}'s rich GitHub profile, repository stats, top languages, and activity summary.`)
+    : 'A beautifully designed, modern web application to extract, visualize, and export GitHub user profiles seamlessly.';
+
+  const jsonLd = user ? {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": user.name || user.login,
+    "url": window.location.href,
+    "image": user.avatar_url,
+    "sameAs": [
+      user.html_url,
+      ...socials.map(s => s.url)
+    ].filter(Boolean),
+    "description": seoDescription,
+    "worksFor": user.company ? {
+      "@type": "Organization",
+      "name": user.company
+    } : undefined
+  } : null;
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] text-gray-900 font-sans selection:bg-blue-100">
+      <Helmet>
+        <title>{seoTitle}</title>
+        <meta name="title" content={seoTitle} />
+        <meta name="description" content={seoDescription} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        {user?.avatar_url && <meta property="og:image" content={user.avatar_url} />}
+        <meta property="og:type" content="profile" />
+        {user?.name && <meta property="profile:first_name" content={user.name} />}
+        {user?.login && <meta property="profile:username" content={user.login} />}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={seoTitle} />
+        <meta property="twitter:description" content={seoDescription} />
+        {user?.avatar_url && <meta property="twitter:image" content={user.avatar_url} />}
+        <link rel="canonical" href={window.location.href} />
+        {jsonLd && (
+          <script type="application/ld+json">
+            {JSON.stringify(jsonLd)}
+          </script>
+        )}
+      </Helmet>
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -94,7 +169,7 @@ export default function App() {
               <span className="text-xl font-bold tracking-tight">GitHub Profile Extractor</span>
             </div>
             
-            <SearchForm onSearch={handleSearch} />
+            <SearchForm onSearch={handleSearch} initialValue={searchParams.username} />
           </div>
         </div>
       </header>
