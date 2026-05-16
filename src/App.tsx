@@ -9,6 +9,7 @@ import { TopLanguages } from './components/TopLanguages';
 import { Organizations } from './components/Organizations';
 import { RecentActivity } from './components/RecentActivity';
 import { ExportModal } from './components/ExportModal';
+import { Chatbot } from './components/Chatbot';
 import { generateMarkdown, downloadMarkdown, MarkdownExportOptions } from './lib/markdownExport';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
 
@@ -319,6 +320,9 @@ export default function App() {
         onDownload={handleDownloadMarkdown}
         copied={copied}
       />
+      {user && !loading && (
+        <Chatbot profileData={{ user, repos, readme, events, orgs }} />
+      )}
     </div>
   );
 }
