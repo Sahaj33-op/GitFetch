@@ -56,7 +56,7 @@ export function GitHubProfile({ user, socials }: GitHubProfileProps) {
             href={user.html_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium text-sm shadow-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
           >
             View on GitHub
           </a>

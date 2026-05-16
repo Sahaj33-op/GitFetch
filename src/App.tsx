@@ -11,10 +11,55 @@ import { ExportModal } from './components/ExportModal';
 import { generateMarkdown, downloadMarkdown, MarkdownExportOptions } from './lib/markdownExport';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
 
-export default function App() {
-  const [searchParams, setSearchParams] = useState({ username: '', token: '' });
+function SearchForm({ onSearch }: { onSearch: (username: string, token: string) => void }) {
   const [searchInput, setSearchInput] = useState('');
   const [tokenInput, setTokenInput] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchInput.trim()) return;
+    onSearch(searchInput.trim(), tokenInput.trim());
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 relative group">
+      <div className="relative flex-grow">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+        </div>
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="GitHub username..."
+          aria-label="GitHub username"
+          className="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
+        />
+      </div>
+      <div className="relative flex-grow group/token">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Key className="h-4 w-4 text-gray-400 group-focus-within/token:text-blue-500 transition-colors" />
+        </div>
+        <input
+          type="password"
+          value={tokenInput}
+          onChange={(e) => setTokenInput(e.target.value)}
+          placeholder="PAT (optional)"
+          aria-label="GitHub Personal Access Token (optional)"
+          className="block w-full sm:w-48 pl-9 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
+        />
+        <div className="absolute top-full mt-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-20 tooltip">
+          <p className="font-semibold mb-1">Personal Access Token</p>
+          <p className="text-gray-300">Add a GitHub PAT to increase rate limits, fetch private repositories, and load SAML/SSO organization data.</p>
+        </div>
+      </div>
+      <button type="submit" className="sr-only">Search</button>
+    </form>
+  );
+}
+
+export default function App() {
+  const [searchParams, setSearchParams] = useState({ username: '', token: '' });
   const [copied, setCopied] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   
@@ -34,10 +79,8 @@ export default function App() {
     downloadMarkdown(md, `${user.login}-profile.md`);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchInput.trim()) return;
-    setSearchParams({ username: searchInput.trim(), token: tokenInput.trim() });
+  const handleSearch = (username: string, token: string) => {
+    setSearchParams({ username, token });
   };
 
   return (
@@ -51,37 +94,7 @@ export default function App() {
               <span className="text-xl font-bold tracking-tight">GitHub Profile Extractor</span>
             </div>
             
-            <form onSubmit={handleSearch} className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 relative group">
-              <div className="relative flex-grow">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
-                </div>
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="GitHub username..."
-                  className="block w-full sm:w-64 pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
-                />
-              </div>
-              <div className="relative flex-grow group/token">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Key className="h-4 w-4 text-gray-400 group-focus-within/token:text-blue-500 transition-colors" />
-                </div>
-                <input
-                  type="password"
-                  value={tokenInput}
-                  onChange={(e) => setTokenInput(e.target.value)}
-                  placeholder="PAT (optional)"
-                  className="block w-full sm:w-48 pl-9 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all"
-                />
-                <div className="absolute top-full mt-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-20 tooltip">
-                  <p className="font-semibold mb-1">Personal Access Token</p>
-                  <p className="text-gray-300">Add a GitHub PAT to increase rate limits, fetch private repositories, and load SAML/SSO organization data.</p>
-                </div>
-              </div>
-              <button type="submit" className="sr-only">Search</button>
-            </form>
+            <SearchForm onSearch={handleSearch} />
           </div>
         </div>
       </header>
@@ -161,7 +174,8 @@ export default function App() {
                 <h2 className="text-lg font-semibold text-gray-900">Dashboard Overview</h2>
                 <button
                   onClick={() => setShowExportModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium shadow-sm"
+                  aria-label="Export profile to markdown"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
                 >
                   <Download className="w-4 h-4" />
                   Export Markdown

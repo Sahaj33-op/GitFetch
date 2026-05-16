@@ -1,0 +1,3 @@
+## 2026-05-16 - Prevent Unnecessary Re-renders on Keystrokes
+**Learning:** React component states bound to input fields (controlled components) trigger re-renders of the entire subtree on every keystroke if they are placed high up in the component tree (like in `App.tsx`). This causes massive performance bottlenecks when the dashboard has expensive children (like `RepoList` rendering ~100+ components).
+**Action:** Extract the search/input forms into isolated components (like `SearchForm`). This encapsulates the controlled state update (`onChange`) so that only the small form component re-renders per keystroke, and the expensive parent only updates when `submit` triggers an actual data fetch.

@@ -56,15 +56,15 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
         </div>
 
         <div className="w-full xl:w-1/2">
-          <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+          <div className="flex flex-wrap gap-y-3 gap-x-5">
             {allLanguages.slice(0, 10).map((lang, index) => (
-              <div key={lang.name} className="flex items-center gap-3 text-sm">
+              <div key={lang.name} className="flex items-center gap-2 text-sm w-[calc(50%-1.25rem)] sm:w-auto">
                 <span 
                   className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" 
                   style={{ backgroundColor: index < COLORS.length ? COLORS[index] : '#e2e8f0' }}
                 ></span>
-                <span className="text-gray-700 font-medium truncate flex-1">{lang.name}</span>
-                <span className="text-gray-400 text-xs font-semibold">{lang.value}</span>
+                <span className="text-gray-700 font-medium whitespace-nowrap">{lang.name}</span>
+                <span className="text-gray-400 text-xs font-semibold ml-1">{lang.value}</span>
               </div>
             ))}
           </div>

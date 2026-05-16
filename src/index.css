@@ -1,2 +1,25 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+.markdown-body img {
+  display: inline-block !important;
+  background-color: transparent !important;
+}
+
+.markdown-body a {
+  text-decoration-line: none !important;
+}
+
+.markdown-body a:hover {
+  text-decoration-line: underline !important;
+}
+
+/* Fix width stretching for big banners */
+.markdown-body img[align="center"] {
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+.markdown-body p {
+  margin-bottom: 16px !important;
+}

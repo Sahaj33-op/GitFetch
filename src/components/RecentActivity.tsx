@@ -20,7 +20,7 @@ export function RecentActivity({ events }: RecentActivityProps) {
   const renderEvent = (event: GitHubEvent) => {
     switch (event.type) {
       case 'PushEvent': {
-        const commits = event.payload.commits?.length || 0;
+        const commits = event.payload?.size || event.payload?.commits?.length || 0;
         return (
           <>
             <div className="p-2 bg-green-50 ring-4 ring-white rounded-full text-green-600 shadow-sm z-10 shrink-0">
@@ -28,7 +28,12 @@ export function RecentActivity({ events }: RecentActivityProps) {
             </div>
             <div className="min-w-0 flex-1 pt-1.5">
               <p className="text-sm text-gray-800">
-                Pushed {commits} commit{commits !== 1 ? 's' : ''} to <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
+                {commits > 0 ? (
+                  <>Pushed {commits} commit{commits !== 1 ? 's' : ''} to </>
+                ) : (
+                  <>Pushed to </>
+                )}
+                <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
               </p>
               <p className="text-xs text-gray-400 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
             </div>
