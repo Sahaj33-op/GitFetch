@@ -10,6 +10,7 @@ import { Organizations } from './components/Organizations';
 import { RecentActivity } from './components/RecentActivity';
 import { ExportModal } from './components/ExportModal';
 import { Chatbot } from './components/Chatbot';
+import { AIPortfolioCTA } from './components/AIPortfolioCTA';
 import { generateMarkdown, downloadMarkdown, MarkdownExportOptions } from './lib/markdownExport';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
 
@@ -295,6 +296,8 @@ export default function App() {
                   Export Markdown
                 </button>
               </div>
+
+              <AIPortfolioCTA user={user} repos={repos} />
 
               <StatsSummary repos={repos} />
 

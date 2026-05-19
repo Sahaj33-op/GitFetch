@@ -168,3 +168,68 @@ export function downloadMarkdown(content: string, filename: string) {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+export function generateAIPortfolioMarkdown(user: GitHubUser, repos: GitHubRepo[]): string {
+  let md = `# Developer Portfolio Context
+
+## Basic Profile
+- **Name:** ${user.name || user.login}
+- **GitHub:** ${user.html_url}
+- **Bio:** ${user.bio || 'Not provided'}
+- **Location:** ${user.location || 'Not provided'}
+- **Website:** ${user.blog || 'Not provided'}
+
+## Strongest Projects
+`;
+
+  // Sort by stars descending and take top 10
+  const topRepos = [...repos]
+    .filter(r => !r.fork)
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 10);
+
+  if (topRepos.length === 0) {
+    md += `*No public projects found.*\n\n`;
+  } else {
+    topRepos.forEach(repo => {
+      md += `### ${repo.name}\n`;
+      md += `- **Description:** ${repo.description || 'No description'}\n`;
+      md += `- **Tech Stack / Language:** ${repo.language || 'Multiple/Unknown'}\n`;
+      md += `- **Stars/Forks:** 🌟 ${repo.stargazers_count} | 🍴 ${repo.forks_count}\n`;
+      
+      const topicsText = repo.topics && repo.topics.length > 0 ? repo.topics.join(', ') : 'None specified';
+      md += `- **Topics:** ${topicsText}\n`;
+      
+      const lastUpdated = new Date(repo.updated_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+      md += `- **Last Updated:** ${lastUpdated}\n`;
+      md += `- **Why it may be important:** ${repo.stargazers_count > 10 ? 'High community engagement. ' : ''}${repo.description ? 'Provides clear utility.' : ''}\n\n`;
+    });
+  }
+
+  md += `## Skill Signals\n`;
+  
+  const langStats = calculateLanguageStats(repos.filter(r => !r.fork));
+  const topLangs = langStats.slice(0, 5).map(l => l.name).join(', ');
+  md += `- **Languages:** ${topLangs || 'Not explicitly identifiable'}\n`;
+
+  // Infer frameworks from topics
+  const allTopics = repos.flatMap(r => r.topics || []);
+  const commonFrameworks = ['react', 'vue', 'angular', 'nextjs', 'node', 'express', 'django', 'flask', 'spring', 'laravel', 'rails', 'typescript', 'tailwind', 'docker', 'kubernetes', 'aws'];
+  const inferred = Array.from(new Set(allTopics.filter(t => commonFrameworks.includes(t.toLowerCase()))));
+  md += `- **Frameworks inferred from repo topics/descriptions:** ${inferred.length > 0 ? inferred.join(', ') : 'None explicitly tagged'}\n`;
+  
+  const totalCommits = 0; // We don't have this explicitly without fetching more
+  md += `- **Open-source activity:** Created ${repos.filter(r => !r.fork).length} original repositories. Contributed to ecosystem through forks or direct commits.\n\n`;
+
+  md += `## Portfolio Instructions
+Use this data to create:
+- homepage hero
+- about section
+- project cards
+- skills section
+- SEO metadata
+- resume bullets
+`;
+
+  return md;
+}
