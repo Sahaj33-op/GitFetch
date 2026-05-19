@@ -87,7 +87,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
               <p className="text-amber-200 font-medium leading-tight mb-1">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
             </div>
             <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5">
-              <p className="text-amber-200 font-medium leading-tight">Security Note: Your PAT is never stored on our servers. It's only used temporarily to fetch GitHub API data directly from your browser.</p>
+              <p className="text-amber-200 font-medium leading-tight">Security Note: Your PAT is never stored on our servers. Use a fine-grained read-only token. Do not enter broad-scope or long-lived tokens.</p>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
           <p className="font-semibold text-amber-800 mb-1 text-sm">PAT Token (Optional)</p>
           <p className="mb-2">Increases rate limits & fetches private repos, orgs & contributions.</p>
           <p className="font-medium text-amber-700 mb-2">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
-          <p className="font-medium text-amber-800">Security Note: Your PAT is never stored on our servers. It remains in your browser session.</p>
+          <p className="font-medium text-amber-800">Security Note: Your PAT is never stored on our servers. Use a fine-grained read-only token.</p>
         </div>
         
         <button 
@@ -297,7 +297,14 @@ export default function App() {
                 </button>
               </div>
 
-              <AIPortfolioCTA user={user} repos={repos} />
+              <AIPortfolioCTA 
+                user={user} 
+                repos={repos} 
+                readme={readme} 
+                orgs={orgs} 
+                socials={socials} 
+                events={events} 
+              />
 
               <StatsSummary repos={repos} />
 

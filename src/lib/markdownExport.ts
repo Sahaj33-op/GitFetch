@@ -169,66 +169,142 @@ export function downloadMarkdown(content: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
-export function generateAIPortfolioMarkdown(user: GitHubUser, repos: GitHubRepo[]): string {
-  let md = `# Developer Portfolio Context
+export function generateAIPortfolioMarkdown(
+  user: GitHubUser,
+  repos: GitHubRepo[],
+  readme: string | null,
+  orgs: GitHubOrg[],
+  socials: GitHubSocialAccount[],
+  events: GitHubEvent[]
+): string {
+  const originalRepos = repos.filter(r => !r.fork);
+  const forkedRepos = repos.filter(r => r.fork);
+
+  const topRepos = [...originalRepos]
+    .sort((a, b) => {
+      const scoreA =
+        a.stargazers_count * 3 +
+        a.forks_count * 2 +
+        (a.homepage ? 5 : 0) +
+        (a.description ? 3 : 0) +
+        ((a.topics?.length || 0) * 1);
+
+      const scoreB =
+        b.stargazers_count * 3 +
+        b.forks_count * 2 +
+        (b.homepage ? 5 : 0) +
+        (b.description ? 3 : 0) +
+        ((b.topics?.length || 0) * 1);
+
+      return scoreB - scoreA;
+    })
+    .slice(0, 10);
+
+  let md = `# AI Portfolio Context for ${user.name || user.login}
 
 ## Basic Profile
 - **Name:** ${user.name || user.login}
-- **GitHub:** ${user.html_url}
+- **GitHub Username:** ${user.login}
+- **GitHub URL:** ${user.html_url}
 - **Bio:** ${user.bio || 'Not provided'}
 - **Location:** ${user.location || 'Not provided'}
 - **Website:** ${user.blog || 'Not provided'}
+- **Followers:** ${user.followers}
+- **Public Repositories:** ${user.public_repos}
 
-## Strongest Projects
+## Social Links
 `;
+  if (socials && socials.length > 0) {
+    socials.forEach(social => {
+      md += `- **${social.provider}:** ${social.url}\n`;
+    });
+  } else {
+    md += `No additional social links provided.\n`;
+  }
+  md += `\n`;
 
-  // Sort by stars descending and take top 10
-  const topRepos = [...repos]
-    .filter(r => !r.fork)
-    .sort((a, b) => b.stargazers_count - a.stargazers_count)
-    .slice(0, 10);
+  md += `## Organizations
+`;
+  if (orgs && orgs.length > 0) {
+    md += orgs.map(org => `- ${org.login} (https://github.com/${org.login})`).join('\n') + `\n\n`;
+  } else {
+    md += `Not a member of any public organizations.\n\n`;
+  }
+
+  if (readme) {
+    md += `## Profile README Highlight
+The user has a profile README. Here is the raw content for context:
+\`\`\`markdown
+${readme.substring(0, 500)}${readme.length > 500 ? '...\n(README truncated)' : ''}
+\`\`\`\n\n`;
+  }
+
+  md += `## Portfolio-Ready Projects\n`;
 
   if (topRepos.length === 0) {
-    md += `*No public projects found.*\n\n`;
+    md += `No original public repositories found.\n\n`;
   } else {
     topRepos.forEach(repo => {
-      md += `### ${repo.name}\n`;
-      md += `- **Description:** ${repo.description || 'No description'}\n`;
-      md += `- **Tech Stack / Language:** ${repo.language || 'Multiple/Unknown'}\n`;
-      md += `- **Stars/Forks:** 🌟 ${repo.stargazers_count} | 🍴 ${repo.forks_count}\n`;
-      
-      const topicsText = repo.topics && repo.topics.length > 0 ? repo.topics.join(', ') : 'None specified';
-      md += `- **Topics:** ${topicsText}\n`;
-      
-      const lastUpdated = new Date(repo.updated_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
-      md += `- **Last Updated:** ${lastUpdated}\n`;
-      md += `- **Why it may be important:** ${repo.stargazers_count > 10 ? 'High community engagement. ' : ''}${repo.description ? 'Provides clear utility.' : ''}\n\n`;
+      const signals: string[] = [];
+
+      if (repo.description) signals.push('has a clear description');
+      if (repo.homepage) signals.push('has a live/demo link');
+      if (repo.stargazers_count >= 10) signals.push(`${repo.stargazers_count} stars`);
+      if (repo.forks_count >= 3) signals.push(`${repo.forks_count} forks`);
+      if (repo.topics?.length) signals.push(`topics: ${repo.topics.slice(0, 6).join(', ')}`);
+      if (!repo.archived) signals.push('not archived');
+
+      md += `### ${repo.name}
+- **GitHub URL:** ${repo.html_url}
+${repo.homepage ? `- **Live Demo:** ${repo.homepage}\n` : ''}- **Description:** ${repo.description || 'No description provided'}
+- **Primary Language:** ${repo.language || 'Unknown'}
+- **Stars:** ${repo.stargazers_count}
+- **Forks:** ${repo.forks_count}
+- **Created:** ${new Date(repo.created_at).toLocaleDateString()}
+- **Last Updated:** ${new Date(repo.updated_at).toLocaleDateString()}
+- **Topics:** ${repo.topics?.length ? repo.topics.join(', ') : 'None'}
+- **Portfolio Signal:** ${signals.length ? signals.join('; ') : 'Needs stronger description, topics, or demo link before highlighting'}
+
+`;
     });
   }
 
-  md += `## Skill Signals\n`;
-  
-  const langStats = calculateLanguageStats(repos.filter(r => !r.fork));
-  const topLangs = langStats.slice(0, 5).map(l => l.name).join(', ');
-  md += `- **Languages:** ${topLangs || 'Not explicitly identifiable'}\n`;
+  const langStats = calculateLanguageStats(originalRepos);
+  const languages = langStats.slice(0, 8).map(l => `${l.name} (${l.value} repos)`).join(', ');
 
-  // Infer frameworks from topics
-  const allTopics = repos.flatMap(r => r.topics || []);
-  const commonFrameworks = ['react', 'vue', 'angular', 'nextjs', 'node', 'express', 'django', 'flask', 'spring', 'laravel', 'rails', 'typescript', 'tailwind', 'docker', 'kubernetes', 'aws'];
-  const inferred = Array.from(new Set(allTopics.filter(t => commonFrameworks.includes(t.toLowerCase()))));
-  md += `- **Frameworks inferred from repo topics/descriptions:** ${inferred.length > 0 ? inferred.join(', ') : 'None explicitly tagged'}\n`;
-  
-  const totalCommits = 0; // We don't have this explicitly without fetching more
-  md += `- **Open-source activity:** Created ${repos.filter(r => !r.fork).length} original repositories. Contributed to ecosystem through forks or direct commits.\n\n`;
+  const repoText = repos
+    .map(r => `${r.name} ${r.description || ''} ${(r.topics || []).join(' ')}`)
+    .join(' ')
+    .toLowerCase();
 
-  md += `## Portfolio Instructions
-Use this data to create:
-- homepage hero
+  const frameworkKeywords = [
+    'react', 'nextjs', 'next.js', 'vue', 'angular',
+    'node', 'express', 'fastapi', 'django', 'flask',
+    'tailwind', 'tailwindcss', 'docker', 'supabase',
+    'mongodb', 'postgresql', 'sqlite', 'redis',
+    'typescript', 'python'
+  ];
+
+  const inferredFrameworks = frameworkKeywords.filter(k => repoText.includes(k));
+
+  md += `## Skill Signals
+- **Primary languages by repo count:** ${languages || 'Not enough data'}
+- **Frameworks/tools inferred from repo names, topics, and descriptions:** ${inferredFrameworks.length ? [...new Set(inferredFrameworks)].join(', ') : 'None confidently inferred'}
+- **Repository footprint:** ${originalRepos.length} original repositories and ${forkedRepos.length} forks visible from fetched data.
+- **Note:** This export is based on public GitHub metadata. Do not invent experience, jobs, metrics, or private work not shown here.
+
+## Instructions for AI Portfolio/Resume Generation
+Use this context to create:
+- homepage hero section
 - about section
-- project cards
 - skills section
-- SEO metadata
-- resume bullets
+- project cards
+- resume project bullets
+- LinkedIn featured project descriptions
+- SEO title and meta description
+
+Prioritize projects with clear descriptions, recent updates, live demos, topics, stars, forks, and strong technical relevance.
+Do not exaggerate impact. If impact is unclear, phrase it as functionality rather than business results.
 `;
 
   return md;

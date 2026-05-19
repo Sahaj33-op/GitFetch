@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
-import { Bot, Copy, Check } from 'lucide-react';
-import { GitHubUser, GitHubRepo, GitHubOrg, GitHubEvent } from '../lib/github';
+import { Bot, Copy, Check, ShieldAlert } from 'lucide-react';
+import { GitHubUser, GitHubRepo, GitHubOrg, GitHubSocialAccount, GitHubEvent } from '../lib/github';
 import { generateAIPortfolioMarkdown } from '../lib/markdownExport';
 
 interface AIPortfolioCTAProps {
   user: GitHubUser;
   repos: GitHubRepo[];
+  readme: string | null;
+  orgs: GitHubOrg[];
+  socials: GitHubSocialAccount[];
+  events: GitHubEvent[];
 }
 
-export function AIPortfolioCTA({ user, repos }: AIPortfolioCTAProps) {
+export function AIPortfolioCTA({ user, repos, readme, orgs, socials, events }: AIPortfolioCTAProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    const markdown = generateAIPortfolioMarkdown(user, repos);
+    const markdown = generateAIPortfolioMarkdown(user, repos, readme, orgs, socials, events);
     try {
       await navigator.clipboard.writeText(markdown);
       setCopied(true);
@@ -30,9 +34,13 @@ export function AIPortfolioCTA({ user, repos }: AIPortfolioCTAProps) {
             <Bot className="w-5 h-5 text-indigo-600" />
             Export for AI Portfolio
           </h3>
-          <p className="text-sm text-indigo-700/80 max-w-2xl leading-relaxed">
+          <p className="text-sm text-indigo-700/80 max-w-2xl leading-relaxed mb-3">
             Copy a structured Markdown summary you can paste into ChatGPT, Claude, Cursor, v0, Bolt, or Lovable to generate a portfolio website or resume content.
           </p>
+          <div className="flex items-start gap-2 text-xs text-indigo-800 bg-indigo-100/50 p-2 rounded max-w-2xl">
+            <ShieldAlert className="w-4 h-4 shrink-0 text-indigo-600 mt-0.5" />
+            <p>If you used a GitHub token, this export may include private repository metadata. Review before pasting into any AI tool.</p>
+          </div>
         </div>
         <button
           onClick={handleCopy}
