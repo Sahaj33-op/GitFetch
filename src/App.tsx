@@ -82,8 +82,11 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
             <div className="absolute -top-2 right-6 w-4 h-4 bg-gray-900 border-t border-l border-gray-700 transform rotate-45"></div>
             <p className="font-semibold mb-1 text-sm">Personal Access Token</p>
             <p className="text-gray-300 leading-relaxed mb-3">Add a GitHub PAT to increase rate limits, fetch private repositories, organizations and contributions.</p>
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5 mb-2">
+              <p className="text-amber-200 font-medium leading-tight mb-1">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
+            </div>
             <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5">
-              <p className="text-amber-200 font-medium leading-tight">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
+              <p className="text-amber-200 font-medium leading-tight">Security Note: Your PAT is never stored on our servers. It's only used temporarily to fetch GitHub API data directly from your browser.</p>
             </div>
           </div>
         </div>
@@ -92,7 +95,8 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
         <div className="md:hidden text-xs text-gray-600 bg-amber-50 border border-amber-200 p-3 rounded-lg w-full">
           <p className="font-semibold text-amber-800 mb-1 text-sm">PAT Token (Optional)</p>
           <p className="mb-2">Increases rate limits & fetches private repos, orgs & contributions.</p>
-          <p className="font-medium text-amber-700">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
+          <p className="font-medium text-amber-700 mb-2">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
+          <p className="font-medium text-amber-800">Security Note: Your PAT is never stored on our servers. It remains in your browser session.</p>
         </div>
         
         <button 

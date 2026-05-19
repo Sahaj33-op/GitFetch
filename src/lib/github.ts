@@ -117,16 +117,25 @@ export async function fetchUser(username: string, token?: string, isAuth?: boole
   });
   if (!res.ok) {
     if (res.status === 404) throw new Error('User not found');
-    if (res.status === 403) throw new Error('API rate limit exceeded. Please try again later.');
+    if (res.status === 403) {
+      const resetTime = res.headers.get('x-ratelimit-reset');
+      let resetMsg = '';
+      if (resetTime) {
+        const resetDate = new Date(parseInt(resetTime) * 1000);
+        resetMsg = ` Resets at ${resetDate.toLocaleTimeString()}`;
+      }
+      throw new Error(`API rate limit exceeded.${resetMsg} Please try again later or provide a PAT.`);
+    }
     throw new Error('Failed to fetch user');
   }
   return res.json();
 }
 
-export async function fetchRepos(username: string, token?: string, isAuth?: boolean): Promise<GitHubRepo[]> {
+export async function fetchRepos(username: string, token?: string, isAuth?: boolean): Promise<{ repos: GitHubRepo[], capped: boolean }> {
   let allRepos: GitHubRepo[] = [];
   let page = 1;
   let hasMore = true;
+  let capped = false;
 
   const endpoint = isAuth ? '/user/repos' : `/users/${username}/repos`;
   const extraParams = isAuth ? '&affiliation=owner,collaborator,organization_member' : '';
@@ -137,7 +146,15 @@ export async function fetchRepos(username: string, token?: string, isAuth?: bool
       cache: 'no-store' 
     });
     if (!res.ok) {
-      if (res.status === 403) throw new Error('API rate limit exceeded.');
+      if (res.status === 403) {
+        const resetTime = res.headers.get('x-ratelimit-reset');
+        let resetMsg = '';
+        if (resetTime) {
+           const resetDate = new Date(parseInt(resetTime) * 1000);
+           resetMsg = ` Resets at ${resetDate.toLocaleTimeString()}`;
+        }
+        throw new Error(`API rate limit exceeded.${resetMsg}`);
+      }
       throw new Error('Failed to fetch repositories');
     }
     const repos = await res.json();
@@ -147,10 +164,13 @@ export async function fetchRepos(username: string, token?: string, isAuth?: bool
       hasMore = false;
     } else {
       page++;
+      if (page > 5) {
+        capped = true;
+      }
     }
   }
 
-  return allRepos;
+  return { repos: allRepos, capped };
 }
 
 export async function fetchUserReadme(username: string, token?: string): Promise<string | null> {

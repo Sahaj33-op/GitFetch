@@ -54,9 +54,9 @@ export function generateMarkdown(
   if (options.includeLanguages) {
     const langStats = calculateLanguageStats(sourceRepos);
     if (langStats.length > 0) {
-      md += `## 💻 Top Languages\n`;
+      md += `## 💻 Primary Languages (by Repo Count)\n`;
       langStats.slice(0, 10).forEach(lang => {
-        md += `- **${lang.name}:** ${lang.value}%\n`;
+        md += `- **${lang.name}:** ${lang.value} repos\n`;
       });
       md += `\n`;
     }

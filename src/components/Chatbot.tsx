@@ -127,7 +127,10 @@ export function Chatbot({ profileData }: ChatbotProps) {
         orgs: profileData.orgs?.map((o: any) => o.login),
       };
 
-      const systemPrompt = `You are an AI assistant analyzing a GitHub profile. 
+      let responseText = '';
+
+      if (config.provider === 'ollama') {
+        const systemPrompt = `You are an AI assistant analyzing a GitHub profile. 
 The user has extracted data for a GitHub profile and wants to ask questions about it.
 
 Here is the profile data (in JSON format):
@@ -137,9 +140,6 @@ ${JSON.stringify(reducedProfileData, null, 2)}
 
 Answer the user's questions accurately based ONLY on this profile data. Be helpful, concise, and encourage best practices. Formulate your response in Markdown formatting.`;
 
-      let responseText = '';
-
-      if (config.provider === 'ollama') {
         const baseUrl = config.baseUrl || 'http://localhost:11434';
         const response = await fetch(`${baseUrl}/api/chat`, {
           method: 'POST',
@@ -162,7 +162,7 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             messages: newMessages,
-            systemPrompt,
+            profileData: reducedProfileData,
             config
           }),
         });
@@ -272,7 +272,10 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={`Enter ${PROVIDER_NAMES[config.provider]} key...`}
                   />
-                  <p className="text-xs text-gray-500 mt-1">Stored locally in your browser.</p>
+                  <div className="mt-2 bg-amber-50 border border-amber-200 p-2.5 rounded text-xs text-amber-800">
+                    <p className="font-semibold mb-1">Security Warning:</p>
+                    <p>API keys are stored locally in your browser and sent securely only to our backend proxy. We do not store or log your API keys on our servers. Avoid using this feature on public or shared devices.</p>
+                  </div>
                 </div>
               )}
 

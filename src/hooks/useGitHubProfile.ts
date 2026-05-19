@@ -73,9 +73,13 @@ export function useGitHubProfile(username: string, token: string = ''): GitHubPr
           throw userRes.reason;
         }
 
-        let userRepos = reposRes.status === 'fulfilled' ? reposRes.value : [];
+        let userRepos = reposRes.status === 'fulfilled' ? reposRes.value.repos : [];
         const userOrgs = orgsRes.status === 'fulfilled' ? orgsRes.value : [];
         let warningsList: string[] = [];
+        
+        if (reposRes.status === 'fulfilled' && reposRes.value.capped) {
+          warningsList.push("Repository fetching was capped at 500 to prevent hitting rate limits. Some older repositories may not be shown.");
+        }
 
         // Fetch organization repositories if any
         if (userOrgs.length > 0) {
@@ -134,7 +138,7 @@ export function useGitHubProfile(username: string, token: string = ''): GitHubPr
     return () => {
       isMounted = false;
     };
-  }, [username]);
+  }, [username, token]);
 
   return data;
 }

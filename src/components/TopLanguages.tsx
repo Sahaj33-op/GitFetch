@@ -26,7 +26,8 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full flex flex-col">
       <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-6">
         <PieChartIcon className="w-5 h-5 text-gray-400" />
-        Languages
+        Primary Languages
+        <span className="text-xs text-gray-400 font-normal ml-1 mt-1">(by Repo Count)</span>
       </h3>
       
       <div className="flex flex-col xl:flex-row gap-8 items-center flex-1">
