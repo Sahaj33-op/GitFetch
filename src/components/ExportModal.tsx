@@ -19,6 +19,7 @@ export function ExportModal({ isOpen, onClose, onCopy, onDownload, copied }: Exp
     excludeForks: true,
     includeLanguages: true,
     includeActivity: true,
+    includePrivateRepos: false,
   });
 
   React.useEffect(() => {
@@ -82,6 +83,11 @@ export function ExportModal({ isOpen, onClose, onCopy, onDownload, copied }: Exp
             <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
               <input type="checkbox" name="includeRepos" checked={options.includeRepos} onChange={handleChange} className="w-4 h-4 text-blue-600 rounded" />
               <span className="text-sm font-medium text-gray-800">Include Public Repositories</span>
+            </label>
+            
+            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              <input type="checkbox" name="includePrivateRepos" checked={options.includePrivateRepos} onChange={handleChange} className="w-4 h-4 text-blue-600 rounded" />
+              <span className="text-sm font-medium text-gray-800">Include Private Repositories</span>
             </label>
             
             {options.includeRepos && (

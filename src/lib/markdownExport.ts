@@ -10,6 +10,7 @@ export interface MarkdownExportOptions {
   excludeForks: boolean;
   includeLanguages: boolean;
   includeActivity: boolean;
+  includePrivateRepos: boolean;
 }
 
 export function generateMarkdown(
@@ -27,6 +28,7 @@ export function generateMarkdown(
     excludeForks: true,
     includeLanguages: true,
     includeActivity: true,
+    includePrivateRepos: false,
   }
 ): string {
   let md = `# ${user.name || user.login} (@${user.login})\n\n`;
@@ -35,7 +37,10 @@ export function generateMarkdown(
     md += `> ${user.bio}\n\n`;
   }
 
-  const sourceRepos = options.excludeForks ? repos.filter(r => !r.fork) : repos;
+  let sourceRepos = options.excludeForks ? repos.filter(r => !r.fork) : repos;
+  if (!options.includePrivateRepos) {
+    sourceRepos = sourceRepos.filter(r => !r.private);
+  }
   const totalStars = sourceRepos.reduce((acc, repo) => acc + repo.stargazers_count, 0);
   const totalForks = sourceRepos.reduce((acc, repo) => acc + repo.forks_count, 0);
 
@@ -175,10 +180,16 @@ export function generateAIPortfolioMarkdown(
   readme: string | null,
   orgs: GitHubOrg[],
   socials: GitHubSocialAccount[],
-  events: GitHubEvent[]
+  events: GitHubEvent[],
+  includePrivate: boolean = false
 ): string {
-  const originalRepos = repos.filter(r => !r.fork);
-  const forkedRepos = repos.filter(r => r.fork);
+  let sourceRepos = repos;
+  if (!includePrivate) {
+    sourceRepos = sourceRepos.filter(r => !r.private);
+  }
+
+  const originalRepos = sourceRepos.filter(r => !r.fork);
+  const forkedRepos = sourceRepos.filter(r => r.fork);
 
   const topRepos = [...originalRepos]
     .sort((a, b) => {
@@ -272,7 +283,7 @@ ${repo.homepage ? `- **Live Demo:** ${repo.homepage}\n` : ''}- **Description:** 
   const langStats = calculateLanguageStats(originalRepos);
   const languages = langStats.slice(0, 8).map(l => `${l.name} (${l.value} repos)`).join(', ');
 
-  const repoText = repos
+  const repoText = sourceRepos
     .map(r => `${r.name} ${r.description || ''} ${(r.topics || []).join(' ')}`)
     .join(' ')
     .toLowerCase();

@@ -36,6 +36,7 @@ export interface GitHubRepo {
   html_url: string;
   description: string | null;
   fork: boolean;
+  private: boolean;
   stargazers_count: number;
   watchers_count: number;
   language: string | null;

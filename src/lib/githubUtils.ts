@@ -27,7 +27,8 @@ export function filterAndSortRepos(
   sortBy: 'stars' | 'updated',
   repoType: 'all' | 'personal' | 'org',
   username: string,
-  language: string = 'all'
+  language: string = 'all',
+  visibility: 'all' | 'public' | 'private' = 'all'
 ) {
   let result = repos.filter(repo => !repo.fork);
 
@@ -35,6 +36,12 @@ export function filterAndSortRepos(
     result = result.filter(repo => !repo.owner || repo.owner.login.toLowerCase() === username.toLowerCase());
   } else if (repoType === 'org') {
     result = result.filter(repo => repo.owner && repo.owner.login.toLowerCase() !== username.toLowerCase());
+  }
+
+  if (visibility === 'public') {
+    result = result.filter(repo => !repo.private);
+  } else if (visibility === 'private') {
+    result = result.filter(repo => repo.private);
   }
 
   if (language && language !== 'all') {

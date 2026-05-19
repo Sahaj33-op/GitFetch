@@ -14,6 +14,7 @@ export function RepoList({ repos, username }: RepoListProps) {
   const [sortBy, setSortBy] = useState<'stars' | 'updated'>('stars');
   const [repoType, setRepoType] = useState<'all' | 'personal' | 'org'>('all');
   const [language, setLanguage] = useState<string>('all');
+  const [visibility, setVisibility] = useState<'all' | 'public' | 'private'>('all');
 
   const availableLanguages = useMemo(() => {
     const langs = new Set<string>();
@@ -21,15 +22,17 @@ export function RepoList({ repos, username }: RepoListProps) {
       if (repo.language && !repo.fork) {
         if (repoType === 'personal' && repo.owner && repo.owner.login.toLowerCase() !== username.toLowerCase()) return;
         if (repoType === 'org' && (!repo.owner || repo.owner.login.toLowerCase() === username.toLowerCase())) return;
+        if (visibility === 'public' && repo.private) return;
+        if (visibility === 'private' && !repo.private) return;
         langs.add(repo.language);
       }
     });
     return Array.from(langs).sort();
-  }, [repos, repoType, username]);
+  }, [repos, repoType, visibility, username]);
 
   const filteredAndSortedRepos = useMemo(() => {
-    return filterAndSortRepos(repos, searchQuery, sortBy, repoType, username, language);
-  }, [repos, searchQuery, sortBy, repoType, username, language]);
+    return filterAndSortRepos(repos, searchQuery, sortBy, repoType, username, language, visibility);
+  }, [repos, searchQuery, sortBy, repoType, username, language, visibility]);
 
   return (
     <div className="space-y-6">
@@ -50,6 +53,16 @@ export function RepoList({ repos, username }: RepoListProps) {
             <option value="all">All Repositories</option>
             <option value="personal">Personal</option>
             <option value="org">Organizations</option>
+          </select>
+
+          <select
+            value={visibility}
+            onChange={(e) => { setVisibility(e.target.value as 'all' | 'public' | 'private'); setLanguage('all'); }}
+            className="px-3.5 py-2 border border-gray-200 rounded-xl text-sm font-medium bg-white text-gray-700 hover:border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none cursor-pointer transition-colors shadow-sm"
+          >
+            <option value="all">Any Visibility</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
           </select>
 
           <select
@@ -96,15 +109,22 @@ export function RepoList({ repos, username }: RepoListProps) {
                 </a>
               </h3>
               <div className="flex flex-col items-end gap-1 shrink-0">
-                {!repo.owner || repo.owner.login.toLowerCase() === username.toLowerCase() ? (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
-                    Personal
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-100/50">
-                    Org
-                  </span>
-                )}
+                <div className="flex gap-1">
+                  {repo.private && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-100/50">
+                      Private
+                    </span>
+                  )}
+                  {!repo.owner || repo.owner.login.toLowerCase() === username.toLowerCase() ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
+                      Personal
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-100/50">
+                      Org
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             

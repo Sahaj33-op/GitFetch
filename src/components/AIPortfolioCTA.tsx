@@ -14,9 +14,12 @@ interface AIPortfolioCTAProps {
 
 export function AIPortfolioCTA({ user, repos, readme, orgs, socials, events }: AIPortfolioCTAProps) {
   const [copied, setCopied] = useState(false);
+  const [includePrivate, setIncludePrivate] = useState(false);
+  
+  const hasPrivateRepos = repos.some(r => r.private);
 
   const handleCopy = async () => {
-    const markdown = generateAIPortfolioMarkdown(user, repos, readme, orgs, socials, events);
+    const markdown = generateAIPortfolioMarkdown(user, repos, readme, orgs, socials, events, includePrivate);
     try {
       await navigator.clipboard.writeText(markdown);
       setCopied(true);
@@ -37,10 +40,22 @@ export function AIPortfolioCTA({ user, repos, readme, orgs, socials, events }: A
           <p className="text-sm text-indigo-700/80 max-w-2xl leading-relaxed mb-3">
             Copy a structured Markdown summary you can paste into ChatGPT, Claude, Cursor, v0, Bolt, or Lovable to generate a portfolio website or resume content.
           </p>
-          <div className="flex items-start gap-2 text-xs text-indigo-800 bg-indigo-100/50 p-2 rounded max-w-2xl">
+          <div className="flex items-start gap-2 text-xs text-indigo-800 bg-indigo-100/50 p-3 rounded max-w-2xl mb-3">
             <ShieldAlert className="w-4 h-4 shrink-0 text-indigo-600 mt-0.5" />
-            <p>If you used a GitHub token, this export may include private repository metadata. Review before pasting into any AI tool.</p>
+            <p className="leading-relaxed">If you used a GitHub token, this export may include private repository metadata. Review before pasting into any AI tool.</p>
           </div>
+          
+          {hasPrivateRepos && (
+            <label className="flex items-center gap-2 text-sm text-indigo-900 cursor-pointer mt-2 hover:opacity-80 transition-opacity w-max">
+              <input 
+                type="checkbox" 
+                checked={includePrivate} 
+                onChange={(e) => setIncludePrivate(e.target.checked)}
+                className="w-4 h-4 text-indigo-600 rounded border-indigo-300 focus:ring-indigo-500"
+              />
+              <span className="font-medium">Include private repositories in export</span>
+            </label>
+          )}
         </div>
         <button
           onClick={handleCopy}
