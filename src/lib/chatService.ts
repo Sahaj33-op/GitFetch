@@ -1,14 +1,27 @@
 import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
+export interface ReducedProfileData {
+  user: any;
+  repos?: {
+    name: string;
+    description: string | null;
+    language: string | null;
+    stars: number;
+    forks: number;
+    topics?: string[];
+  }[];
+  orgs?: string[];
+}
+
 export const ChatRequestSchema = z.object({
   messages: z.array(z.object({
     role: z.enum(['user', 'model']),
     content: z.string(),
-  })),
+  })).min(1, "At least one message is required"),
   profileData: z.any().optional(),
   config: z.object({
-    provider: z.enum(['gemini', 'openai', 'anthropic', 'groq', 'mistral', 'openrouter', 'ollama']),
+    provider: z.enum(['gemini', 'openai', 'anthropic', 'groq', 'mistral', 'openrouter']),
     apiKey: z.string().optional(),
     model: z.string().optional(),
     baseUrl: z.string().optional(),
@@ -17,7 +30,7 @@ export const ChatRequestSchema = z.object({
 
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 
-const buildSystemPrompt = (profileData: any) => {
+const buildSystemPrompt = (profileData: ReducedProfileData) => {
   return `You are an AI assistant analyzing a GitHub profile. 
 The user has extracted data for a GitHub profile and wants to ask questions about it.
 
@@ -38,7 +51,7 @@ export async function processChatRequest(reqBody: unknown) {
   const { messages, profileData, config } = parsed.data;
   const { provider, apiKey, model } = config;
 
-  const systemPrompt = profileData ? buildSystemPrompt(profileData) : 'You are a helpful AI assistant. Formulate your response in Markdown formatting.';
+  const systemPrompt = profileData ? buildSystemPrompt(profileData as ReducedProfileData) : 'You are a helpful AI assistant. Formulate your response in Markdown formatting.';
   let responseText = '';
 
   if (provider === 'gemini') {
@@ -54,7 +67,7 @@ export async function processChatRequest(reqBody: unknown) {
     const latestMessage = messages[messages.length - 1].content;
 
     const response = await ai.models.generateContent({
-      model: model || "gemini-3-flash-preview",
+      model: model || "gemini-2.5-flash",
       contents: [
         ...history,
         { role: "user", parts: [{ text: latestMessage }] }
@@ -141,23 +154,6 @@ export async function processChatRequest(reqBody: unknown) {
 
     const data = await response.json();
     responseText = data.content?.[0]?.text || '';
-  } else if (provider === 'ollama') {
-    const baseUrl = config.baseUrl || 'http://localhost:11434';
-    const response = await fetch(`${baseUrl}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: config.model || 'llama3.2',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages.map(m => ({ role: m.role === 'model' ? 'assistant' : m.role, content: m.content }))
-        ],
-        stream: false
-      })
-    });
-    if (!response.ok) throw new Error('Ollama connection failed.');
-    const data = await response.json();
-    responseText = data.message?.content || '';
   } else {
     throw new Error(`Unsupported provider: ${provider}`);
   }
