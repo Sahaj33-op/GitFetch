@@ -15,8 +15,8 @@ interface ChatConfig {
 const DEFAULT_MODELS: Record<Provider, string> = {
   gemini: 'gemini-2.5-flash',
   openai: 'gpt-4o-mini',
-  anthropic: 'claude-3-5-sonnet-20241022',
-  groq: 'llama3-8b-8192',
+  anthropic: 'claude-3-5-sonnet-latest',
+  groq: 'llama-3.3-70b-versatile',
   mistral: 'mistral-large-latest',
   openrouter: 'google/gemini-2.5-pro',
   ollama: 'llama3.2',
@@ -35,8 +35,8 @@ const PROVIDER_NAMES: Record<Provider, string> = {
 const PROVIDER_NOTES: Record<Provider, string> = {
   gemini: 'Leave empty to use the default app key. Requires a Google AI Studio API key otherwise.',
   openai: 'Requires an OpenAI API key. Examples: gpt-4o, gpt-4o-mini',
-  anthropic: 'Requires an Anthropic API key. Examples: claude-3-5-sonnet-20241022, claude-3-haiku-20240307',
-  groq: 'Requires a Groq API key for fast inference. Examples: llama3-8b-8192, mixtral-8x7b-32768',
+  anthropic: 'Requires an Anthropic API key. Examples: claude-3-5-sonnet-latest, claude-3-5-haiku-latest',
+  groq: 'Requires a Groq API key for fast inference. Examples: llama-3.3-70b-versatile, llama-3.1-8b-instant',
   mistral: 'Requires a Mistral API key. Examples: mistral-large-latest, mistral-small-latest',
   openrouter: 'Requires an OpenRouter API key. Examples: google/gemini-2.5-pro, anthropic/claude-3.5-sonnet',
   ollama: 'Ensure Ollama is running locally and CORS is enabled (e.g., OLLAMA_ORIGINS="*").',

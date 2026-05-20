@@ -140,7 +140,7 @@ export async function processChatRequest(reqBody: unknown) {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: model || 'claude-3-5-sonnet-20241022',
+        model: model || 'claude-3-5-sonnet-latest',
         system: systemPrompt,
         messages: formattedMessages,
         max_tokens: 4096

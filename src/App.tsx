@@ -34,9 +34,9 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
   return (
     <form onSubmit={handleSubmit} className="w-full md:w-auto flex flex-col md:flex-row gap-2 relative">
       <div className="flex w-full gap-2 md:w-auto">
-        <div className="relative flex-grow">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 md:h-4 md:w-4 text-zinc-400 dark:text-zinc-500 transition-colors" />
+        <div className="relative flex-grow group/search">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+            <Search className="h-5 w-5 md:h-4 md:w-4 text-zinc-500 dark:text-zinc-400 group-focus-within/search:text-indigo-550 dark:group-focus-within/search:text-indigo-400 transition-colors" />
           </div>
           <input
             type="text"
@@ -66,8 +66,8 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
 
       <div className={`${showToken ? 'flex' : 'hidden'} md:flex flex-col md:flex-row gap-2 w-full md:w-auto`}>
         <div className="relative flex-grow group/token">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Key className="h-4 w-4 text-zinc-400 dark:text-zinc-500 group-focus-within/token:text-blue-500 transition-colors" />
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+            <Key className="h-4 w-4 text-zinc-500 dark:text-zinc-400 group-focus-within/token:text-indigo-550 dark:group-focus-within/token:text-blue-400 transition-colors" />
           </div>
           <input
             type="password"

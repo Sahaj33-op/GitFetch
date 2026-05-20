@@ -300,3 +300,23 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration-line: underline !important;
 }
 
+/* Premium browser autofill overrides to fit light/dark glassmorphic themes */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #09090b !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover, 
+.dark input:-webkit-autofill:focus, 
+.dark input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f4f4f5 !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: 0 0 0px 1000px #09090b inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px #09090b inset !important;
+}
