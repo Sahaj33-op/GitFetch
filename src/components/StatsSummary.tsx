@@ -68,7 +68,7 @@ export function StatsSummary({ repos }: StatsSummaryProps) {
             {stats.mostPopular?.name || 'N/A'}
           </div>
           <div className="text-xs font-medium text-emerald-600 mt-1 uppercase tracking-widest">
-            {stats.mostPopular?.stargazers_count.toLocaleString()} stars
+            {stats.mostPopular?.stargazers_count?.toLocaleString() ?? 0} stars
           </div>
         </div>
       </div>
