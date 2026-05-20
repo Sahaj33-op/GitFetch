@@ -11,7 +11,7 @@
 
 ### A modern, responsive web application that extracts, visualizes, and exports GitHub user profiles with elegance.
 
-**[🚀 Live Demo](https://gitfetch-sahaj33.vercel.app/)**
+**[🚀 Live Demo](https://gitfetch-sahaj33.vercel.app/)** • **[💻 GitHub Repository](https://github.com/Sahaj33-op/GitFetch.git)**
 
 [Explore Features](#sparkles-features) • [Installation](#gear-getting-started) • [Usage](#rocket-usage)
 

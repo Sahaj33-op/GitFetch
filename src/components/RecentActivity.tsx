@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GitHubEvent } from '../lib/github';
 import { formatDistanceToNow } from 'date-fns';
-import { GitCommit, GitPullRequest, CircleDot, Star, FolderPlus } from 'lucide-react';
+import { GitCommit, GitPullRequest, CircleDot, Star, FolderPlus, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface RecentActivityProps {
   events: GitHubEvent[];
@@ -106,18 +106,35 @@ export function RecentActivity({ events }: RecentActivityProps) {
     }
   };
 
+  const [isExpanded, setIsExpanded] = useState(true);
+
   return (
     <div className="glass-panel rounded-3xl p-6 h-full flex flex-col">
-      <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-6 flex items-center gap-2">
-        <CircleDot className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
-        Activity Feed
-      </h3>
-      <div className="space-y-6 relative flex-1 before:absolute before:inset-y-0 before:left-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200/60 dark:before:via-zinc-800/40 before:to-transparent">
-        {filteredEvents.map((event) => (
-          <div key={event.id} className="relative flex items-start gap-4">
-            {renderEvent(event)}
-          </div>
-        ))}
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
+          <CircleDot className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
+          Activity Feed
+        </h3>
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="p-1.5 border border-indigo-200/50 dark:border-zinc-800/80 rounded-xl bg-white/70 dark:bg-zinc-900/30 text-zinc-505 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-650"
+          title={isExpanded ? "Collapse Section" : "Expand Section"}
+          aria-label={isExpanded ? "Collapse Activity Feed" : "Expand Activity Feed"}
+        >
+          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </button>
+      </div>
+
+      <div className={`transition-all duration-300 ease-in-out origin-top overflow-hidden ${
+        isExpanded ? "opacity-100 max-h-[800px]" : "opacity-0 max-h-0 pointer-events-none -mb-6"
+      }`}>
+        <div className="space-y-6 relative flex-1 before:absolute before:inset-y-0 before:left-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200/60 dark:before:via-zinc-800/40 before:to-transparent pt-2">
+          {filteredEvents.map((event) => (
+            <div key={event.id} className="relative flex items-start gap-4">
+              {renderEvent(event)}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

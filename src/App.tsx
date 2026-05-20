@@ -176,6 +176,13 @@ export default function App() {
     window.history.pushState({}, '', url);
   };
 
+  const handleGoHome = () => {
+    setSearchParams({ username: '', token: '' });
+    const url = new URL(window.location.href);
+    url.searchParams.delete('username');
+    window.history.pushState({}, '', url);
+  };
+
   const seoTitle = user 
     ? `${user.name || user.login}'s GitHub Profile | GitHub Profile Extractor` 
     : 'GitHub Profile Extractor';
@@ -236,17 +243,32 @@ export default function App() {
       <header className="bg-white/55 dark:bg-zinc-950/60 backdrop-blur-xl border-b border-indigo-200/40 dark:border-zinc-900/40 sticky top-0 z-40 transition-all duration-300 shadow-sm shadow-indigo-100/50 dark:shadow-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-3.5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
-            <div className="flex items-center gap-2">
+            <button 
+              onClick={handleGoHome}
+              className="flex items-center gap-2 cursor-pointer focus:outline-none hover:opacity-85 active:scale-[0.98] transition-all text-left bg-transparent border-0 p-0"
+              title="Back to Homepage"
+            >
               <Github className="w-6 h-6 md:w-8 md:h-8 text-zinc-900 dark:text-zinc-50" />
               <span className="text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-700 dark:from-zinc-50 dark:via-zinc-200 dark:to-zinc-300 bg-clip-text text-transparent">GitHub Profile Extractor</span>
-            </div>
+            </button>
             
             <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
               <SearchForm onSearch={handleSearch} initialValue={searchParams.username} />
               
+              <a
+                href="https://github.com/Sahaj33-op/GitFetch.git"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-650 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
+                title="View GitHub Repository"
+                aria-label="View GitHub Repository"
+              >
+                <Github className="w-5 h-5 md:w-4.5 md:h-4.5" />
+              </a>
+
               <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
+                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-650 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
                 aria-label="Toggle Dark Mode"
               >
                 {theme === 'light' ? <Moon className="w-5 h-5 md:w-4.5 md:h-4.5" /> : <Sun className="w-5 h-5 md:w-4.5 md:h-4.5" />}
