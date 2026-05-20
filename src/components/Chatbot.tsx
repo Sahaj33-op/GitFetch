@@ -13,7 +13,7 @@ interface ChatConfig {
 }
 
 const DEFAULT_MODELS: Record<Provider, string> = {
-  gemini: 'gemini-3-flash-preview',
+  gemini: 'gemini-2.5-flash',
   openai: 'gpt-4o-mini',
   anthropic: 'claude-3-5-sonnet-20241022',
   groq: 'llama3-8b-8192',
