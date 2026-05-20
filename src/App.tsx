@@ -44,13 +44,13 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="GitHub username..."
             aria-label="GitHub username"
-            className="block w-full md:w-56 lg:w-64 pl-10 pr-3 py-2.5 md:py-2 border border-zinc-200/50 dark:border-zinc-800/50 rounded-xl bg-white/45 dark:bg-zinc-950/30 backdrop-blur-md placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:bg-white/85 dark:focus:bg-zinc-950/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base md:text-sm text-zinc-900 dark:text-zinc-50 shadow-sm"
+          className="block w-full md:w-56 lg:w-64 pl-10 pr-3 py-2.5 md:py-2 border border-indigo-200/70 dark:border-zinc-800/50 rounded-xl bg-white/90 dark:bg-zinc-950/30 backdrop-blur-md placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:bg-white dark:focus:bg-zinc-950/80 focus:ring-2 focus:ring-indigo-400/30 focus:border-indigo-400 transition-all text-base md:text-sm text-zinc-900 dark:text-zinc-50 shadow-sm"
           />
         </div>
         <button 
           type="button"
           onClick={() => setShowToken(!showToken)}
-          className={`md:hidden flex flex-shrink-0 items-center justify-center px-3 border border-zinc-200/50 dark:border-zinc-800/50 rounded-xl transition-all shadow-sm ${showToken ? 'bg-zinc-200/80 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100' : 'bg-white/45 dark:bg-zinc-950/30 backdrop-blur-md text-zinc-500 dark:text-zinc-450'}`}
+          className={`md:hidden flex flex-shrink-0 items-center justify-center px-3 border border-indigo-200/60 dark:border-zinc-800/50 rounded-xl transition-all shadow-sm ${showToken ? 'bg-zinc-200/80 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100' : 'bg-white/90 dark:bg-zinc-950/30 backdrop-blur-md text-zinc-500 dark:text-zinc-400'}`}
           aria-label="Toggle token input"
         >
           <Key className="w-5 h-5" />
@@ -75,7 +75,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
             onChange={(e) => setTokenInput(e.target.value)}
             placeholder="PAT (optional)"
             aria-label="GitHub Personal Access Token (optional)"
-            className="block w-full md:w-44 lg:w-48 pl-9 pr-3 py-2.5 md:py-2 border border-zinc-200/50 dark:border-zinc-800/50 rounded-xl bg-white/45 dark:bg-zinc-950/30 backdrop-blur-md placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:bg-white/85 dark:focus:bg-zinc-950/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base md:text-sm text-zinc-900 dark:text-zinc-50 shadow-sm"
+            className="block w-full md:w-44 lg:w-48 pl-9 pr-3 py-2.5 md:py-2 border border-indigo-200/70 dark:border-zinc-800/50 rounded-xl bg-white/90 dark:bg-zinc-950/30 backdrop-blur-md placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:bg-white dark:focus:bg-zinc-950/80 focus:ring-2 focus:ring-indigo-400/30 focus:border-indigo-400 transition-all text-base md:text-sm text-zinc-900 dark:text-zinc-50 shadow-sm"
           />
           
           {/* Desktop Tooltip */}
@@ -201,7 +201,7 @@ export default function App() {
   } : null;
 
   return (
-    <div className="relative overflow-x-hidden min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-blue-100/50 transition-colors duration-300">
+    <div className="relative overflow-x-hidden min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-indigo-200 dark:selection:bg-blue-900/50 transition-colors duration-300">
       {/* Ambient glassmorphic glowing mesh circles (Viewport locked for premium scrolling warp) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[-10%] left-[-10%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-gradient-to-br from-blue-400/40 to-cyan-400/25 dark:from-blue-600/12 dark:to-cyan-600/8 rounded-full blur-[120px] animate-glow-1" />
@@ -246,7 +246,7 @@ export default function App() {
               
               <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2.5 md:p-2.5 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl bg-white/45 dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-550 dark:text-zinc-350 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 shadow-sm"
+                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
                 aria-label="Toggle Dark Mode"
               >
                 {theme === 'light' ? <Moon className="w-5 h-5 md:w-4.5 md:h-4.5" /> : <Sun className="w-5 h-5 md:w-4.5 md:h-4.5" />}

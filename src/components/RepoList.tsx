@@ -48,7 +48,7 @@ export function RepoList({ repos, username }: RepoListProps) {
           <select
             value={repoType}
             onChange={(e) => { setRepoType(e.target.value as 'all' | 'personal' | 'org'); setLanguage('all'); }}
-            className="px-3.5 py-2.5 border border-zinc-200/50 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/45 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
+            className="px-3.5 py-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/90 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
           >
             <option value="all">All Repositories</option>
             <option value="personal">Personal</option>
@@ -58,7 +58,7 @@ export function RepoList({ repos, username }: RepoListProps) {
           <select
             value={visibility}
             onChange={(e) => { setVisibility(e.target.value as 'all' | 'public' | 'private'); setLanguage('all'); }}
-            className="px-3.5 py-2.5 border border-zinc-200/50 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/45 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
+            className="px-3.5 py-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/90 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
           >
             <option value="all">Any Visibility</option>
             <option value="public">Public</option>
@@ -68,7 +68,7 @@ export function RepoList({ repos, username }: RepoListProps) {
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="px-3.5 py-2.5 border border-zinc-200/50 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/45 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
+            className="px-3.5 py-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/90 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
           >
             <option value="all">All Languages</option>
             {availableLanguages.map(lang => (
@@ -83,14 +83,14 @@ export function RepoList({ repos, username }: RepoListProps) {
               placeholder="Find a repository..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2.5 border border-zinc-200/50 dark:border-zinc-800/60 rounded-xl text-sm bg-white/45 dark:bg-zinc-900/40 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 w-full outline-none transition-all shadow-sm h-full backdrop-blur-md"
+              className="pl-9 pr-4 py-2.5 border border-indigo-200/60 dark:border-zinc-800/60 rounded-xl text-sm bg-white/90 dark:bg-zinc-900/40 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 w-full outline-none transition-all shadow-sm h-full backdrop-blur-md"
             />
           </div>
           
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'stars' | 'updated')}
-            className="px-3.5 py-2.5 border border-zinc-200/50 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/45 dark:bg-zinc-900/40 text-zinc-750 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
+            className="px-3.5 py-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/90 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
           >
             <option value="stars">Sort by Stars</option>
             <option value="updated">Sort by Updated</option>
