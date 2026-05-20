@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Search, Github, Loader2, AlertCircle, Download, Copy, Check, Key } from 'lucide-react';
+import { Search, Github, Loader2, AlertCircle, Download, Copy, Check, Key, Sun, Moon } from 'lucide-react';
 import { GitHubProfile } from './components/GitHubProfile';
 import { ProfileReadme } from './components/ProfileReadme';
 import { RepoList } from './components/RepoList';
@@ -36,7 +36,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
       <div className="flex w-full gap-2 md:w-auto">
         <div className="relative flex-grow">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 md:h-4 md:w-4 text-gray-400 transition-colors" />
+            <Search className="h-5 w-5 md:h-4 md:w-4 text-zinc-400 dark:text-zinc-500 transition-colors" />
           </div>
           <input
             type="text"
@@ -44,20 +44,20 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="GitHub username..."
             aria-label="GitHub username"
-            className="block w-full md:w-56 lg:w-64 pl-10 pr-3 py-2.5 md:py-2 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-base md:text-sm"
+            className="block w-full md:w-56 lg:w-64 pl-10 pr-3 py-2.5 md:py-2 border border-zinc-200/50 dark:border-zinc-800/50 rounded-xl bg-white/45 dark:bg-zinc-950/30 backdrop-blur-md placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:bg-white/85 dark:focus:bg-zinc-950/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base md:text-sm text-zinc-900 dark:text-zinc-50 shadow-sm"
           />
         </div>
         <button 
           type="button"
           onClick={() => setShowToken(!showToken)}
-          className={`md:hidden flex flex-shrink-0 items-center justify-center px-3 border border-gray-300 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 ${showToken ? 'bg-gray-200' : 'bg-gray-50 text-gray-600'}`}
+          className={`md:hidden flex flex-shrink-0 items-center justify-center px-3 border border-zinc-200/50 dark:border-zinc-800/50 rounded-xl transition-all shadow-sm ${showToken ? 'bg-zinc-200/80 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100' : 'bg-white/45 dark:bg-zinc-950/30 backdrop-blur-md text-zinc-500 dark:text-zinc-450'}`}
           aria-label="Toggle token input"
         >
           <Key className="w-5 h-5" />
         </button>
         <button 
           type="submit" 
-          className="md:hidden flex flex-shrink-0 items-center justify-center px-4 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
+          className="md:hidden flex flex-shrink-0 items-center justify-center px-4 bg-gradient-to-r from-blue-600 to-indigo-650 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
           aria-label="Extract Profile"
         >
           <Search className="w-5 h-5" />
@@ -67,7 +67,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
       <div className={`${showToken ? 'flex' : 'hidden'} md:flex flex-col md:flex-row gap-2 w-full md:w-auto`}>
         <div className="relative flex-grow group/token">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Key className="h-4 w-4 text-gray-400 group-focus-within/token:text-blue-500 transition-colors" />
+            <Key className="h-4 w-4 text-zinc-400 dark:text-zinc-500 group-focus-within/token:text-blue-500 transition-colors" />
           </div>
           <input
             type="password"
@@ -75,34 +75,33 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
             onChange={(e) => setTokenInput(e.target.value)}
             placeholder="PAT (optional)"
             aria-label="GitHub Personal Access Token (optional)"
-            className="block w-full md:w-44 lg:w-48 pl-9 pr-3 py-2.5 md:py-2 border border-gray-300 rounded-lg bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-base md:text-sm"
+            className="block w-full md:w-44 lg:w-48 pl-9 pr-3 py-2.5 md:py-2 border border-zinc-200/50 dark:border-zinc-800/50 rounded-xl bg-white/45 dark:bg-zinc-950/30 backdrop-blur-md placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:bg-white/85 dark:focus:bg-zinc-950/80 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base md:text-sm text-zinc-900 dark:text-zinc-50 shadow-sm"
           />
           
           {/* Desktop Tooltip */}
-          <div className="hidden md:block absolute top-[calc(100%+0.5rem)] right-0 w-72 p-4 bg-gray-900 border border-gray-700 text-white text-xs rounded-lg opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-50 shadow-xl">
-            <div className="absolute -top-2 right-6 w-4 h-4 bg-gray-900 border-t border-l border-gray-700 transform rotate-45"></div>
-            <p className="font-semibold mb-1 text-sm">Personal Access Token</p>
-            <p className="text-gray-300 leading-relaxed mb-3">Add a GitHub PAT to increase rate limits, fetch private repositories, organizations and contributions.</p>
+          <div className="hidden md:block absolute top-[calc(100%+0.5rem)] right-0 w-72 p-4 bg-white/95 dark:bg-zinc-950/95 border border-zinc-200/60 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 text-xs rounded-xl opacity-0 invisible group-hover/token:opacity-100 group-hover/token:visible transition-all z-50 shadow-xl backdrop-blur-md">
+            <p className="font-bold mb-1 text-sm">Personal Access Token</p>
+            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed mb-3">Add a GitHub PAT to increase rate limits, fetch private repositories, organizations and contributions.</p>
             <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5 mb-2">
-              <p className="text-amber-200 font-medium leading-tight mb-1">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
+              <p className="text-amber-700 dark:text-amber-300 font-semibold leading-tight mb-1">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch SAML/SSO organizations.</p>
             </div>
             <div className="bg-amber-500/10 border border-amber-500/20 rounded p-2.5">
-              <p className="text-amber-200 font-medium leading-tight">Security Note: Your PAT is never stored on our servers. Use a fine-grained read-only token. Do not enter broad-scope or long-lived tokens.</p>
+              <p className="text-amber-700 dark:text-amber-300 font-semibold leading-tight">Security Note: Your PAT is never stored on our servers. Use a fine-grained read-only token. Do not enter broad-scope or long-lived tokens.</p>
             </div>
           </div>
         </div>
         
         {/* Mobile token note */}
-        <div className="md:hidden text-xs text-gray-600 bg-amber-50 border border-amber-200 p-3 rounded-lg w-full">
-          <p className="font-semibold text-amber-800 mb-1 text-sm">PAT Token (Optional)</p>
+        <div className="md:hidden text-xs text-zinc-550 dark:text-zinc-400 bg-amber-50/50 dark:bg-amber-950/15 border border-amber-200/50 dark:border-amber-900/30 p-3 rounded-lg w-full">
+          <p className="font-bold text-amber-800 dark:text-amber-400 mb-1 text-sm">PAT Token (Optional)</p>
           <p className="mb-2">Increases rate limits & fetches private repos, orgs & contributions.</p>
-          <p className="font-medium text-amber-700 mb-2">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
-          <p className="font-medium text-amber-800">Security Note: Your PAT is never stored on our servers. Use a fine-grained read-only token.</p>
+          <p className="font-semibold text-amber-700 dark:text-amber-500 mb-2">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
+          <p className="font-semibold text-amber-800 dark:text-amber-400">Security Note: Your PAT is never stored on our servers. Use a fine-grained read-only token.</p>
         </div>
         
         <button 
           type="submit" 
-          className="hidden md:flex items-center justify-center gap-2 px-6 py-2 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
+          className="hidden md:flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-650 hover:from-blue-500 hover:to-indigo-550 active:scale-[0.97] text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 dark:shadow-blue-400/10 hover:shadow-lg hover:shadow-blue-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 cursor-pointer font-bold"
         >
           <span className="text-sm">Extract</span>
         </button>
@@ -124,6 +123,23 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   
+  // Theme Management
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return systemPrefersDark ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const { user, repos, readme, orgs, socials, events, loading, error, warnings } = useGitHubProfile(searchParams.username, searchParams.token);
 
   useEffect(() => {
@@ -185,7 +201,14 @@ export default function App() {
   } : null;
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] text-gray-900 font-sans selection:bg-blue-100">
+    <div className="relative overflow-x-hidden min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-blue-100/50 transition-colors duration-300">
+      {/* Ambient glassmorphic glowing mesh circles (Viewport locked for premium scrolling warp) */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-blue-500/16 to-cyan-500/10 dark:from-blue-600/12 dark:to-cyan-600/8 rounded-full blur-[130px] animate-glow-1" />
+        <div className="absolute top-[35%] right-[-10%] w-[45vw] h-[45vw] max-w-[500px] max-h-[500px] bg-gradient-to-br from-purple-500/14 to-pink-500/8 dark:from-purple-600/10 dark:to-pink-600/6 rounded-full blur-[110px] animate-glow-2" />
+        <div className="absolute bottom-[-10%] left-[20%] w-[45vw] h-[45vw] max-w-[700px] max-h-[700px] bg-gradient-to-br from-indigo-500/16 to-blue-500/10 dark:from-indigo-600/12 dark:to-blue-600/8 rounded-full blur-[140px] pointer-events-none animate-glow-3" />
+      </div>
+
       <Helmet>
         <title>{seoTitle}</title>
         <meta name="title" content={seoTitle} />
@@ -209,15 +232,25 @@ export default function App() {
       </Helmet>
 
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4">
+      <header className="bg-white/60 dark:bg-zinc-950/60 backdrop-blur-md border-b border-zinc-200/60 dark:border-zinc-900/40 sticky top-0 z-40 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-3.5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
             <div className="flex items-center gap-2">
-              <Github className="w-6 h-6 md:w-8 md:h-8 text-gray-900" />
-              <span className="text-lg md:text-xl font-bold tracking-tight">GitHub Profile Extractor</span>
+              <Github className="w-6 h-6 md:w-8 md:h-8 text-zinc-900 dark:text-zinc-50" />
+              <span className="text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-700 dark:from-zinc-50 dark:via-zinc-200 dark:to-zinc-300 bg-clip-text text-transparent">GitHub Profile Extractor</span>
             </div>
             
-            <SearchForm onSearch={handleSearch} initialValue={searchParams.username} />
+            <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+              <SearchForm onSearch={handleSearch} initialValue={searchParams.username} />
+              
+              <button
+                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                className="p-2.5 md:p-2.5 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl bg-white/45 dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-550 dark:text-zinc-350 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-600 shadow-sm"
+                aria-label="Toggle Dark Mode"
+              >
+                {theme === 'light' ? <Moon className="w-5 h-5 md:w-4.5 md:h-4.5" /> : <Sun className="w-5 h-5 md:w-4.5 md:h-4.5" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -236,31 +269,31 @@ export default function App() {
         )}
 
         {error && !loading && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
-            <AlertCircle className="w-10 h-10 text-red-500 mb-3" />
-            <h3 className="text-lg font-semibold text-red-800 mb-1">Error fetching profile</h3>
-            <p className="text-red-600">{error}</p>
+          <div className="bg-red-50/70 dark:bg-red-950/20 border border-red-200/80 dark:border-red-900/30 rounded-xl p-6 flex flex-col items-center justify-center text-center max-w-2xl mx-auto backdrop-blur-md">
+            <AlertCircle className="w-10 h-10 text-red-500 dark:text-red-400 mb-3" />
+            <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-1">Error fetching profile</h3>
+            <p className="text-red-600 dark:text-red-300">{error}</p>
           </div>
         )}
 
         {warnings && warnings.length > 0 && !loading && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8 max-w-7xl mx-auto">
+          <div className="bg-amber-50/70 dark:bg-amber-950/15 border border-amber-200/80 dark:border-amber-900/30 rounded-xl p-5 mb-8 max-w-7xl mx-auto backdrop-blur-md">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 mt-0.5">
-                <AlertCircle className="w-6 h-6 text-amber-500" />
+                <AlertCircle className="w-6 h-6 text-amber-500 dark:text-amber-400" />
               </div>
               <div className="flex-1">
-                <h3 className="text-sm font-semibold text-amber-800 mb-2">Some data could not be fetched</h3>
-                <div className="text-amber-700 text-sm space-y-2 text-left">
+                <h3 className="text-sm font-semibold text-amber-800 dark:text-amber-200 mb-2">Some data could not be fetched</h3>
+                <div className="text-amber-750 dark:text-amber-300 text-sm space-y-2 text-left">
                   <ul className="list-disc pl-5 space-y-1">
                     {warnings.map((w, i) => (
                       <li key={i}>{w}</li>
                     ))}
                   </ul>
                   {warnings.some(w => w.includes('403')) && (
-                    <div className="mt-3 bg-amber-100/50 p-3 rounded-lg border border-amber-200/60 font-medium">
-                      <p className="mb-1 text-xs text-amber-800 font-semibold tracking-wide uppercase">Trouble fetching Org data?</p>
-                      <p className="text-amber-800/90 leading-relaxed">
+                    <div className="mt-3 bg-amber-100/50 dark:bg-amber-950/30 p-3 rounded-lg border border-amber-200/60 dark:border-amber-900/20 font-medium">
+                      <p className="mb-1 text-xs text-amber-800 dark:text-amber-300 font-semibold tracking-wide uppercase">Trouble fetching Org data?</p>
+                      <p className="text-amber-800/90 dark:text-amber-300/80 leading-relaxed">
                         If you are using a Personal Access Token (PAT), organization data might be protected by SAML Single Sign-On. 
                         You must explicitly authorize your PAT for SSO in GitHub. 
                         Go to <strong>Settings &gt; Developer settings &gt; Personal access tokens</strong>, target your token, and click <strong>Configure SSO</strong>.
@@ -285,12 +318,12 @@ export default function App() {
 
             {/* Main Content */}
             <div className="w-full lg:w-2/3 xl:w-3/4 space-y-8 min-w-0">
-              <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900">Dashboard Overview</h2>
+              <div className="flex justify-between items-center glass-panel p-4 rounded-xl">
+                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-200">Dashboard Overview</h2>
                 <button
                   onClick={() => setShowExportModal(true)}
                   aria-label="Export profile to markdown"
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2"
+                  className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-lg transition-colors text-sm font-medium shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2"
                 >
                   <Download className="w-4 h-4" />
                   Export Markdown

@@ -23,19 +23,19 @@ export function RecentActivity({ events }: RecentActivityProps) {
         const commits = event.payload?.size || event.payload?.commits?.length || 0;
         return (
           <>
-            <div className="p-2 bg-green-50 ring-4 ring-white rounded-full text-green-600 shadow-sm z-10 shrink-0">
+            <div className="p-2 bg-green-50 dark:bg-green-500/10 ring-4 ring-white dark:ring-zinc-900 rounded-full text-green-600 dark:text-green-400 shadow-sm z-10 shrink-0">
               <GitCommit className="w-4 h-4" />
             </div>
             <div className="min-w-0 flex-1 pt-1.5">
-              <p className="text-sm text-gray-800">
+              <p className="text-sm text-zinc-800 dark:text-zinc-200">
                 {commits > 0 ? (
                   <>Pushed {commits} commit{commits !== 1 ? 's' : ''} to </>
                 ) : (
                   <>Pushed to </>
                 )}
-                <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
+                <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-450 break-words">{event.repo.name}</a>
               </p>
-              <p className="text-xs text-gray-400 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
             </div>
           </>
         );
@@ -44,14 +44,14 @@ export function RecentActivity({ events }: RecentActivityProps) {
         const action = event.payload.action;
         return (
           <>
-            <div className="p-2 bg-purple-50 ring-4 ring-white rounded-full text-purple-600 shadow-sm z-10 shrink-0">
+            <div className="p-2 bg-purple-50 dark:bg-purple-500/10 ring-4 ring-white dark:ring-zinc-900 rounded-full text-purple-600 dark:text-purple-400 shadow-sm z-10 shrink-0">
               <GitPullRequest className="w-4 h-4" />
             </div>
             <div className="min-w-0 flex-1 pt-1.5">
-              <p className="text-sm text-gray-800">
-                <span className="capitalize">{action}</span> a pull request in <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
+              <p className="text-sm text-zinc-800 dark:text-zinc-200">
+                <span className="capitalize">{action}</span> a pull request in <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-450 break-words">{event.repo.name}</a>
               </p>
-              <p className="text-xs text-gray-400 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
             </div>
           </>
         );
@@ -59,14 +59,14 @@ export function RecentActivity({ events }: RecentActivityProps) {
       case 'IssuesEvent': {
         return (
           <>
-            <div className="p-2 bg-orange-50 ring-4 ring-white rounded-full text-orange-600 shadow-sm z-10 shrink-0">
+            <div className="p-2 bg-orange-50 dark:bg-orange-500/10 ring-4 ring-white dark:ring-zinc-900 rounded-full text-orange-600 dark:text-orange-400 shadow-sm z-10 shrink-0">
               <CircleDot className="w-4 h-4" />
             </div>
             <div className="min-w-0 flex-1 pt-1.5">
-              <p className="text-sm text-gray-800">
-                <span className="capitalize">{event.payload.action}</span> an issue in <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
+              <p className="text-sm text-zinc-800 dark:text-zinc-200">
+                <span className="capitalize">{event.payload.action}</span> an issue in <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-450 break-words">{event.repo.name}</a>
               </p>
-              <p className="text-xs text-gray-400 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
             </div>
           </>
         );
@@ -74,14 +74,14 @@ export function RecentActivity({ events }: RecentActivityProps) {
       case 'WatchEvent': {
         return (
           <>
-            <div className="p-2 bg-yellow-50 ring-4 ring-white rounded-full text-yellow-600 shadow-sm z-10 shrink-0">
+            <div className="p-2 bg-yellow-50 dark:bg-yellow-500/10 ring-4 ring-white dark:ring-zinc-900 rounded-full text-yellow-600 dark:text-yellow-400 shadow-sm z-10 shrink-0">
               <Star className="w-4 h-4" />
             </div>
             <div className="min-w-0 flex-1 pt-1.5">
-              <p className="text-sm text-gray-800">
-                Starred <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
+              <p className="text-sm text-zinc-800 dark:text-zinc-200">
+                Starred <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-450 break-words">{event.repo.name}</a>
               </p>
-              <p className="text-xs text-gray-400 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
             </div>
           </>
         );
@@ -89,14 +89,14 @@ export function RecentActivity({ events }: RecentActivityProps) {
       case 'CreateEvent': {
         return (
           <>
-            <div className="p-2 bg-blue-50 ring-4 ring-white rounded-full text-blue-600 shadow-sm z-10 shrink-0">
+            <div className="p-2 bg-blue-50 dark:bg-blue-500/10 ring-4 ring-white dark:ring-zinc-900 rounded-full text-blue-600 dark:text-blue-400 shadow-sm z-10 shrink-0">
               <FolderPlus className="w-4 h-4" />
             </div>
             <div className="min-w-0 flex-1 pt-1.5">
-              <p className="text-sm text-gray-800">
-                Created a new {event.payload.ref_type} in <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-blue-600 break-words">{event.repo.name}</a>
+              <p className="text-sm text-zinc-800 dark:text-zinc-200">
+                Created a new {event.payload.ref_type} in <a href={`https://github.com/${event.repo.name}`} target="_blank" rel="noopener noreferrer" className="font-semibold text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-450 break-words">{event.repo.name}</a>
               </p>
-              <p className="text-xs text-gray-400 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-1">{formatDistanceToNow(new Date(event.created_at))} ago</p>
             </div>
           </>
         );
@@ -107,15 +107,14 @@ export function RecentActivity({ events }: RecentActivityProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm overflow-hidden h-full">
-      <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-        <CircleDot className="w-5 h-5 text-gray-400" />
+    <div className="glass-panel rounded-3xl p-6 h-full flex flex-col">
+      <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-6 flex items-center gap-2">
+        <CircleDot className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
         Activity Feed
       </h3>
-      <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-100 before:to-transparent">
-        {filteredEvents.map((event, i) => (
+      <div className="space-y-6 relative flex-1 before:absolute before:inset-y-0 before:left-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200/60 dark:before:via-zinc-800/40 before:to-transparent">
+        {filteredEvents.map((event) => (
           <div key={event.id} className="relative flex items-start gap-4">
-            <div className="hidden md:block w-px h-full bg-gray-100 absolute left-[1.15rem] top-8 -z-10 last:hidden"></div>
             {renderEvent(event)}
           </div>
         ))}

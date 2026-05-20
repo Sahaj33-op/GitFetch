@@ -189,7 +189,7 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
     return (
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 transition-all hover:scale-105 z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 flex items-center justify-center group"
+        className="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 dark:bg-blue-650 dark:hover:bg-blue-600 hover:shadow-blue-550/20 dark:hover:shadow-blue-550/40 transition-all hover:scale-105 z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 flex items-center justify-center group cursor-pointer"
         aria-label="Open AI Assistant"
       >
         <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform" />
@@ -198,43 +198,43 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
   }
 
   return (
-    <div className={`fixed z-50 bg-white shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ease-in-out border border-gray-200
+    <div className={`fixed z-50 bg-white/95 dark:bg-zinc-950/95 shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ease-in-out border border-zinc-200/80 dark:border-zinc-800/80 backdrop-blur-lg
       ${isMinimized 
         ? 'right-0 bottom-0 w-full h-16 md:right-6 md:bottom-6 md:w-[450px] rounded-t-2xl md:rounded-2xl' 
         : 'inset-0 w-full h-[100dvh] md:inset-auto md:right-6 md:bottom-6 md:w-[450px] md:h-[650px] md:max-h-[800px] md:rounded-2xl'
       }`}>
       {/* Header */}
-      <div className="bg-gray-900 text-white flex items-center justify-between shrink-0 cursor-pointer" 
+      <div className="bg-zinc-900/90 dark:bg-zinc-900/90 text-white flex items-center justify-between shrink-0 cursor-pointer border-b border-zinc-850" 
            style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))', paddingBottom: '1rem', paddingLeft: '1rem', paddingRight: '1rem' }}
            onClick={() => setIsMinimized(!isMinimized)}>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-blue-650 flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
             <h3 className="font-semibold text-sm">Profile Assistant</h3>
-            <p className="text-xs text-gray-400">Powered by {PROVIDER_NAMES[config.provider]}</p>
+            <p className="text-xs text-zinc-400">Powered by {PROVIDER_NAMES[config.provider]}</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
           <button 
             type="button"
             onClick={(e) => { e.stopPropagation(); setShowSettings(!showSettings); if (isMinimized) setIsMinimized(false); }}
-            className={`p-1.5 hover:bg-gray-800 rounded-md transition-colors ${showSettings ? 'text-white bg-gray-800' : 'text-gray-300'}`}
+            className={`p-1.5 hover:bg-zinc-800 rounded-md transition-colors cursor-pointer ${showSettings ? 'text-white bg-zinc-800' : 'text-zinc-300'}`}
           >
             <Settings className="w-4 h-4" />
           </button>
           <button 
             type="button"
             onClick={(e) => { e.stopPropagation(); setIsMinimized(!isMinimized); if (showSettings) setShowSettings(false); }}
-            className="p-1.5 hover:bg-gray-800 rounded-md transition-colors text-gray-300"
+            className="p-1.5 hover:bg-zinc-800 rounded-md transition-colors text-zinc-300 cursor-pointer"
           >
             {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
           </button>
           <button 
             type="button"
             onClick={(e) => { e.stopPropagation(); setIsOpen(false); setIsMinimized(false); setShowSettings(false); }}
-            className="p-1.5 hover:bg-red-500 rounded-md transition-colors text-gray-300 hover:text-white"
+            className="p-1.5 hover:bg-red-500 rounded-md transition-colors text-zinc-300 hover:text-white cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -242,17 +242,17 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
       </div>
 
       {!isMinimized && showSettings && (
-        <div className="flex-1 overflow-y-auto p-6 bg-gray-50 flex flex-col gap-4">
+        <div className="flex-1 overflow-y-auto p-6 bg-zinc-50 dark:bg-zinc-900/30 flex flex-col gap-4">
           <div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-4">Chat Settings</h4>
+            <h4 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 mb-4">Chat Settings</h4>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">AI Provider</label>
+                <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1">AI Provider</label>
                 <select 
                   value={config.provider}
                   onChange={handleProviderChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 cursor-pointer"
                 >
                   {Object.entries(PROVIDER_NAMES).map(([key, name]) => (
                     <option key={key} value={key}>{name}</option>
@@ -262,18 +262,18 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
 
               {config.provider !== 'ollama' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     API Key
                   </label>
                   <input 
                     type="password"
                     value={config.apiKey}
                     onChange={(e) => setConfig({ ...config, apiKey: e.target.value })}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-650"
                     placeholder={`Enter ${PROVIDER_NAMES[config.provider]} key...`}
                   />
-                  <div className="mt-2 bg-amber-50 border border-amber-200 p-2.5 rounded text-xs text-amber-800">
-                    <p className="font-semibold mb-1">Security Warning:</p>
+                  <div className="mt-2 bg-amber-50/75 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 p-2.5 rounded text-xs text-amber-805 dark:text-amber-300">
+                    <p className="font-bold mb-1">Security Warning:</p>
                     <p>API keys are stored locally in your browser and sent securely only to our backend proxy. We do not store or log your API keys on our servers. Avoid using this feature on public or shared devices.</p>
                   </div>
                 </div>
@@ -281,39 +281,39 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
 
               {config.provider === 'ollama' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1">
                     Ollama Base URL
                   </label>
                   <input 
                     type="text"
                     value={config.baseUrl}
                     onChange={(e) => setConfig({ ...config, baseUrl: e.target.value })}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-650"
                     placeholder="http://localhost:11434"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Model Name</label>
+                <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Model Name</label>
                 <input 
                   type="text"
                   value={config.model}
                   onChange={(e) => setConfig({ ...config, model: e.target.value })}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-650"
                 />
               </div>
 
-              <div className="bg-blue-50 border border-blue-100 p-3 rounded-lg text-sm text-blue-800">
-                <p className="font-medium mb-1">Provider Note</p>
-                <p className="text-blue-700">{PROVIDER_NOTES[config.provider]}</p>
+              <div className="bg-blue-50/80 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30 p-3 rounded-lg text-sm text-blue-805 dark:text-blue-300">
+                <p className="font-semibold mb-1">Provider Note</p>
+                <p className="text-blue-750 dark:text-blue-400/90">{PROVIDER_NOTES[config.provider]}</p>
               </div>
             </div>
           </div>
-          <div className="mt-auto pt-4 border-t border-gray-200">
+          <div className="mt-auto pt-4 border-t border-zinc-200/80 dark:border-zinc-800">
              <button 
                onClick={() => setShowSettings(false)}
-               className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 flex justify-center items-center gap-2 font-medium"
+               className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 flex justify-center items-center gap-2 font-semibold"
              >
                <Save className="w-4 h-4" /> Save & Close
              </button>
@@ -324,18 +324,18 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
       {!isMinimized && !showSettings && (
         <>
           {/* Output Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-50/30 dark:bg-zinc-950/25">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'model' && (
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 border border-blue-200">
-                    <Bot className="w-5 h-5 text-blue-600" />
+                  <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center shrink-0 border border-blue-200/85 dark:border-blue-900/40">
+                    <Bot className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                 )}
-                <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm leading-relaxed overflow-hidden
+                <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm leading-relaxed overflow-hidden shadow-sm
                   ${msg.role === 'user' 
                     ? 'bg-blue-600 text-white rounded-br-sm' 
-                    : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm shadow-sm'
+                    : 'bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-sm'
                   }`}
                 >
                   {msg.role === 'model' ? (
@@ -352,13 +352,13 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
             ))}
             {isLoading && (
               <div className="flex gap-3 justify-start">
-                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 border border-blue-200">
-                  <Bot className="w-5 h-5 text-blue-600" />
+                <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center shrink-0 border border-blue-200/85 dark:border-blue-900/40">
+                  <Bot className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
-                <div className="px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-sm flex items-center gap-1 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/85 rounded-2xl rounded-bl-sm flex items-center gap-1 shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 dark:bg-blue-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-2 h-2 rounded-full bg-blue-400 dark:bg-blue-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2 h-2 rounded-full bg-blue-400 dark:bg-blue-500 animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             )}
@@ -366,7 +366,7 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
           </div>
 
           {/* Input Area */}
-          <form onSubmit={handleSubmit} className="bg-white border-t border-gray-200 shrink-0"
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800/80 shrink-0"
                 style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))', paddingTop: '1rem', paddingLeft: '1rem', paddingRight: '1rem' }}>
             <div className="relative">
               <input
@@ -374,13 +374,13 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about this profile..."
-                className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm"
+                className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-250 dark:border-zinc-800 rounded-xl text-zinc-905 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-550 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-zinc-950 transition-all text-sm"
                 disabled={isLoading}
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 cursor-pointer disabled:cursor-not-allowed transition-colors"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />

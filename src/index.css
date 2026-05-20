@@ -1,11 +1,68 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Smooth transition for theme switches */
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+/* Organic floating mesh animations for backdrop glows */
+@keyframes float-glow-1 {
+  0%, 100% { transform: scale(1) translate(0px, 0px); }
+  33% { transform: scale(1.15) translate(40px, -30px); }
+  66% { transform: scale(0.9) translate(-30px, 50px); }
+}
+
+@keyframes float-glow-2 {
+  0%, 100% { transform: scale(1) translate(0px, 0px); }
+  40% { transform: scale(1.1) translate(-50px, 40px); }
+  75% { transform: scale(0.95) translate(30px, -20px); }
+}
+
+@keyframes float-glow-3 {
+  0%, 100% { transform: scale(1) translate(0px, 0px); }
+  30% { transform: scale(1.2) translate(30px, 30px); }
+  70% { transform: scale(0.85) translate(-40px, -40px); }
+}
+
+.animate-glow-1 {
+  animation: float-glow-1 18s ease-in-out infinite alternate;
+}
+
+.animate-glow-2 {
+  animation: float-glow-2 22s ease-in-out infinite alternate;
+}
+
+.animate-glow-3 {
+  animation: float-glow-3 20s ease-in-out infinite alternate;
+}
+
+/* Smooth transition for theme switches with premium dot-grid backgrounds */
 body {
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(rgba(99, 102, 241, 0.04) 1.5px, transparent 1.5px),
+    radial-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px, 12px 12px;
+  background-attachment: fixed;
+  transition: background-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark body {
+  background-color: #030712; /* Rich deep midnight-grey */
+  background-image: 
+    radial-gradient(rgba(99, 102, 241, 0.03) 1.5px, transparent 1.5px),
+    radial-gradient(rgba(244, 244, 245, 0.015) 1px, transparent 1px);
+  background-size: 24px 24px, 12px 12px;
+  background-attachment: fixed;
+}
+
+/* Premium typography mappings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
 }
 
 /* Base scrollbar styling for premium look */
@@ -19,53 +76,220 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(161, 161, 170, 0.3);
+  background: rgba(100, 116, 139, 0.15);
+  border: 2px solid transparent;
+  background-clip: padding-box;
   border-radius: 9999px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(113, 113, 122, 0.3);
+  background: rgba(148, 163, 184, 0.1);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(161, 161, 170, 0.5);
+  background: rgba(100, 116, 139, 0.35);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
-/* Glassmorphism panel helper utility */
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.25);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Premium Glassmorphism panel helper utility */
 .glass-panel {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(228, 228, 231, 0.8);
-  box-shadow: 0 4px 6px -1px rgba(9, 9, 11, 0.03), 0 2px 4px -2px rgba(9, 9, 11, 0.03);
-  transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 10px 30px -10px rgba(0, 0, 0, 0.02),
+    0 1px 1px 0 rgba(255, 255, 255, 0.95) inset,
+    0 0 0 1px rgba(9, 9, 11, 0.005);
+  transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dark .glass-panel {
-  background-color: rgba(24, 24, 27, 0.6);
-  border: 1px solid rgba(63, 63, 70, 0.45);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+  background-color: rgba(15, 23, 42, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.005);
 }
 
-/* Markdown typography details */
+.glass-panel:hover {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 
+    0 20px 40px -10px rgba(59, 130, 246, 0.08),
+    0 1px 1px 0 rgba(255, 255, 255, 0.95) inset;
+  transform: translateY(-2px);
+}
+
+.dark .glass-panel:hover {
+  background-color: rgba(20, 30, 54, 0.72);
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow: 
+    0 30px 60px -15px rgba(0, 0, 0, 0.65),
+    0 0 30px 0 rgba(99, 102, 241, 0.08),
+    0 1px 0 0 rgba(255, 255, 255, 0.09) inset;
+  transform: translateY(-2px);
+}
+
+/* Markdown typography deep integration overrides */
+.markdown-body {
+  font-family: var(--font-sans) !important;
+  background-color: transparent !important;
+  color: #3f3f46 !important;
+  line-height: 1.625 !important;
+}
+
+.dark .markdown-body {
+  color: #d4d4d8 !important;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-family: var(--font-display) !important;
+  color: #09090b !important;
+  border-bottom-color: rgba(9, 9, 11, 0.08) !important;
+  font-weight: 700 !important;
+}
+
+.dark .markdown-body h1,
+.dark .markdown-body h2,
+.dark .markdown-body h3,
+.dark .markdown-body h4,
+.dark .markdown-body h5,
+.dark .markdown-body h6 {
+  color: #f4f4f5 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.markdown-body hr {
+  background-color: rgba(9, 9, 11, 0.08) !important;
+}
+
+.dark .markdown-body hr {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-bottom: 20px !important;
+}
+
+.markdown-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  background-color: rgba(9, 9, 11, 0.05) !important;
+  color: #09090b !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 6px !important;
+  font-size: 85% !important;
+}
+
+.dark .markdown-body code {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #fafafa !important;
+}
+
+.markdown-body pre {
+  background-color: rgba(250, 250, 250, 0.8) !important;
+  border: 1px solid rgba(9, 9, 11, 0.06) !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  overflow: auto !important;
+}
+
+.dark .markdown-body pre {
+  background-color: rgba(3, 7, 18, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.markdown-body pre code {
+  background-color: transparent !important;
+  padding: 0 !important;
+  font-size: 100% !important;
+  color: inherit !important;
+  border-radius: 0 !important;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  border: 1px solid rgba(9, 9, 11, 0.08) !important;
+  padding: 8px 14px !important;
+}
+
+.dark .markdown-body table th,
+.dark .markdown-body table td {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.markdown-body table tr {
+  background-color: transparent !important;
+  border-top: 1px solid rgba(9, 9, 11, 0.06) !important;
+}
+
+.dark .markdown-body table tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: rgba(9, 9, 11, 0.015) !important;
+}
+
+.dark .markdown-body table tr:nth-child(2n) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid rgba(99, 102, 241, 0.4) !important;
+  color: #71717a !important;
+  padding: 0 15px !important;
+}
+
+.dark .markdown-body blockquote {
+  color: #a1a1aa !important;
+}
+
 .markdown-body img {
   display: inline-block !important;
   background-color: transparent !important;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .markdown-body img {
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3);
 }
 
 .markdown-body a {
   text-decoration-line: none !important;
+  color: #2563eb !important;
+  font-weight: 600 !important;
+}
+
+.dark .markdown-body a {
+  color: #60a5fa !important;
 }
 
 .markdown-body a:hover {
   text-decoration-line: underline !important;
 }
 
-.markdown-body img[align="center"] {
-  display: block !important;
-  margin: 0 auto !important;
-}
-
-.markdown-body p {
-  margin-bottom: 16px !important;
-}

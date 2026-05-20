@@ -8,7 +8,22 @@ interface TopLanguagesProps {
   repos: GitHubRepo[];
 }
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
+const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#14b8a6', '#a855f7'];
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white/95 dark:bg-zinc-900/95 border border-zinc-200/80 dark:border-zinc-800 p-3 rounded-xl shadow-xl backdrop-blur-md">
+        <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">{data.name}</p>
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mt-1">
+          Repositories: <span className="text-blue-600 dark:text-blue-400 font-bold">{data.value}</span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export function TopLanguages({ repos }: TopLanguagesProps) {
   const { chartData, allLanguages } = useMemo(() => {
@@ -23,11 +38,11 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
   if (allLanguages.length === 0) return null;
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-full flex flex-col">
-      <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-6">
-        <PieChartIcon className="w-5 h-5 text-gray-400" />
+    <div className="glass-panel p-6 rounded-3xl h-full flex flex-col">
+      <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2 mb-6">
+        <PieChartIcon className="w-5 h-5 text-zinc-400 dark:text-zinc-500" />
         Primary Languages
-        <span className="text-xs text-gray-400 font-normal ml-1 mt-1">(by Repo Count)</span>
+        <span className="text-xs text-zinc-400 dark:text-zinc-500 font-normal ml-1 mt-1">(by Repo Count)</span>
       </h3>
       
       <div className="flex flex-col xl:flex-row gap-8 items-center flex-1">
@@ -48,10 +63,7 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip 
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)' }}
-                itemStyle={{ color: '#111827', fontWeight: 500 }}
-              />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -64,8 +76,8 @@ export function TopLanguages({ repos }: TopLanguagesProps) {
                   className="w-2.5 h-2.5 rounded-full flex-shrink-0 shadow-sm" 
                   style={{ backgroundColor: index < COLORS.length ? COLORS[index] : '#e2e8f0' }}
                 ></span>
-                <span className="text-gray-700 font-medium whitespace-nowrap">{lang.name}</span>
-                <span className="text-gray-400 text-xs font-semibold ml-1">{lang.value}</span>
+                <span className="text-zinc-700 dark:text-zinc-300 font-semibold whitespace-nowrap">{lang.name}</span>
+                <span className="text-zinc-400 dark:text-zinc-500 text-xs font-semibold ml-1">{lang.value}</span>
               </div>
             ))}
           </div>
