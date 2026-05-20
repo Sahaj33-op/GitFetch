@@ -19,8 +19,6 @@
 
 <p align="center">
   <a href="https://gitfetch-sahaj33.vercel.app/"><b>🚀 Live Demo</b></a>
-  ·
-  <a href="https://github.com/Sahaj33-op/GitFetch"><b>💻 Source Code</b></a>
 </p>
 
 <p align="center">
