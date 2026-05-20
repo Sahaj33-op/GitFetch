@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { processChatRequest } from "./src/lib/chatService.js";
+import { processChatRequest } from "./src/lib/chatService";
 
 const app = express();
 const PORT = 3000;
