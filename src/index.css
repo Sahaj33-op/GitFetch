@@ -40,11 +40,12 @@
 /* Smooth transition for theme switches with premium dot-grid backgrounds */
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(rgba(99, 102, 241, 0.04) 1.5px, transparent 1.5px),
-    radial-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px);
-  background-size: 24px 24px, 12px 12px;
+  /* Rich multi-stop gradient: cool white → indigo → violet → lavender blush */
+  background-color: #eef0ff;
+  background-image:
+    linear-gradient(135deg, #f0f4ff 0%, #e8eeff 25%, #ede8ff 50%, #f3e8ff 75%, #fce7f3 100%),
+    radial-gradient(rgba(99, 102, 241, 0.06) 1.5px, transparent 1.5px);
+  background-size: 100% 100%, 24px 24px;
   background-attachment: fixed;
   transition: background-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
               color 400ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -52,7 +53,7 @@ body {
 }
 
 .dark body {
-  background-color: #030712; /* Rich deep midnight-grey */
+  background-color: #030712;
   background-image: 
     radial-gradient(rgba(99, 102, 241, 0.03) 1.5px, transparent 1.5px),
     radial-gradient(rgba(244, 244, 245, 0.015) 1px, transparent 1px);
@@ -102,18 +103,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Premium Glassmorphism panel helper utility */
 .glass-panel {
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  background-color: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(28px) saturate(1.5);
+  -webkit-backdrop-filter: blur(28px) saturate(1.5);
+  background-color: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow: 
-    0 10px 30px -10px rgba(0, 0, 0, 0.02),
-    0 1px 1px 0 rgba(255, 255, 255, 0.95) inset,
-    0 0 0 1px rgba(9, 9, 11, 0.005);
+    0 8px 32px -8px rgba(99, 102, 241, 0.12),
+    0 2px 8px -2px rgba(139, 92, 246, 0.08),
+    0 1px 2px 0 rgba(255, 255, 255, 0.9) inset,
+    0 0 0 1px rgba(99, 102, 241, 0.04);
   transition: all 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dark .glass-panel {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   background-color: rgba(15, 23, 42, 0.58);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
@@ -123,11 +127,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-panel:hover {
-  background-color: rgba(255, 255, 255, 0.85);
-  border-color: rgba(59, 130, 246, 0.3);
+  background-color: rgba(255, 255, 255, 0.80);
+  border-color: rgba(99, 102, 241, 0.35);
   box-shadow: 
-    0 20px 40px -10px rgba(59, 130, 246, 0.08),
-    0 1px 1px 0 rgba(255, 255, 255, 0.95) inset;
+    0 20px 48px -12px rgba(99, 102, 241, 0.18),
+    0 4px 16px -4px rgba(139, 92, 246, 0.12),
+    0 1px 2px 0 rgba(255, 255, 255, 0.95) inset;
   transform: translateY(-2px);
 }
 

@@ -204,9 +204,10 @@ export default function App() {
     <div className="relative overflow-x-hidden min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-blue-100/50 transition-colors duration-300">
       {/* Ambient glassmorphic glowing mesh circles (Viewport locked for premium scrolling warp) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-blue-500/16 to-cyan-500/10 dark:from-blue-600/12 dark:to-cyan-600/8 rounded-full blur-[130px] animate-glow-1" />
-        <div className="absolute top-[35%] right-[-10%] w-[45vw] h-[45vw] max-w-[500px] max-h-[500px] bg-gradient-to-br from-purple-500/14 to-pink-500/8 dark:from-purple-600/10 dark:to-pink-600/6 rounded-full blur-[110px] animate-glow-2" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[45vw] h-[45vw] max-w-[700px] max-h-[700px] bg-gradient-to-br from-indigo-500/16 to-blue-500/10 dark:from-indigo-600/12 dark:to-blue-600/8 rounded-full blur-[140px] pointer-events-none animate-glow-3" />
+        <div className="absolute top-[-10%] left-[-10%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-gradient-to-br from-blue-400/40 to-cyan-400/25 dark:from-blue-600/12 dark:to-cyan-600/8 rounded-full blur-[120px] animate-glow-1" />
+        <div className="absolute top-[35%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-violet-400/35 to-pink-400/22 dark:from-purple-600/10 dark:to-pink-600/6 rounded-full blur-[100px] animate-glow-2" />
+        <div className="absolute bottom-[-10%] left-[20%] w-[50vw] h-[50vw] max-w-[750px] max-h-[750px] bg-gradient-to-br from-indigo-400/40 to-purple-400/25 dark:from-indigo-600/12 dark:to-blue-600/8 rounded-full blur-[130px] pointer-events-none animate-glow-3" />
+        <div className="absolute top-[60%] left-[-5%] w-[30vw] h-[30vw] max-w-[400px] max-h-[400px] bg-gradient-to-br from-fuchsia-400/20 to-rose-400/12 dark:from-fuchsia-600/6 dark:to-rose-600/4 rounded-full blur-[90px] pointer-events-none animate-glow-2" />
       </div>
 
       <Helmet>
@@ -232,7 +233,7 @@ export default function App() {
       </Helmet>
 
       {/* Header */}
-      <header className="bg-white/60 dark:bg-zinc-950/60 backdrop-blur-md border-b border-zinc-200/60 dark:border-zinc-900/40 sticky top-0 z-40 transition-all duration-300">
+      <header className="bg-white/55 dark:bg-zinc-950/60 backdrop-blur-xl border-b border-indigo-200/40 dark:border-zinc-900/40 sticky top-0 z-40 transition-all duration-300 shadow-sm shadow-indigo-100/50 dark:shadow-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-3.5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
             <div className="flex items-center gap-2">
