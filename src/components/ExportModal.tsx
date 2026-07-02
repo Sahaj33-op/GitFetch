@@ -20,6 +20,7 @@ export function ExportModal({ isOpen, onClose, onCopy, onDownload, copied }: Exp
     includeLanguages: true,
     includeActivity: true,
     includePrivateRepos: false,
+    includeRepoReadmes: false,
   });
 
   React.useEffect(() => {
@@ -91,10 +92,23 @@ export function ExportModal({ isOpen, onClose, onCopy, onDownload, copied }: Exp
             </label>
             
             {options.includeRepos && (
-              <label className="flex items-center gap-3 p-3 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl cursor-pointer hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20 transition-all ml-6 animate-in slide-in-from-left-2 duration-150">
-                <input type="checkbox" name="excludeForks" checked={options.excludeForks} onChange={handleChange} className="w-4 h-4 text-blue-600 dark:text-blue-500 rounded border-zinc-350 dark:border-zinc-700 bg-white dark:bg-zinc-950 focus:ring-blue-500 cursor-pointer" />
-                <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Exclude Forked Repositories</span>
-              </label>
+              <>
+                <label className="flex items-center gap-3 p-3 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl cursor-pointer hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20 transition-all ml-6 animate-in slide-in-from-left-2 duration-150">
+                  <input type="checkbox" name="excludeForks" checked={options.excludeForks} onChange={handleChange} className="w-4 h-4 text-blue-600 dark:text-blue-500 rounded border-zinc-350 dark:border-zinc-700 bg-white dark:bg-zinc-950 focus:ring-blue-500 cursor-pointer" />
+                  <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Exclude Forked Repositories</span>
+                </label>
+                
+                <label className="flex items-center gap-3 p-3 border border-zinc-200/80 dark:border-zinc-800/60 rounded-xl cursor-pointer hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20 transition-all ml-6 animate-in slide-in-from-left-2 duration-150">
+                  <input type="checkbox" name="includeRepoReadmes" checked={options.includeRepoReadmes} onChange={handleChange} className="w-4 h-4 text-blue-600 dark:text-blue-500 rounded border-zinc-350 dark:border-zinc-700 bg-white dark:bg-zinc-950 focus:ring-blue-500 cursor-pointer" />
+                  <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Include Repository READMEs</span>
+                </label>
+
+                {options.includeRepoReadmes && (
+                  <div className="ml-6 p-3.5 bg-amber-500/5 dark:bg-amber-950/10 border border-amber-550/20 dark:border-amber-900/20 rounded-2xl text-xs text-amber-800 dark:text-amber-300 leading-relaxed animate-in slide-in-from-left-2 duration-150">
+                    <strong>Rate Limit Warning:</strong> Bundling repository READMEs requires fetching each file. This may take a few seconds and could trigger GitHub API rate limiting if you do not use a Personal Access Token (PAT).
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

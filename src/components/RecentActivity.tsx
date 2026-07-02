@@ -13,7 +13,7 @@ export function RecentActivity({ events }: RecentActivityProps) {
   // Filter to the most relevant events to keep the feed clean
   const filteredEvents = events.filter(e => 
     ['PushEvent', 'PullRequestEvent', 'IssuesEvent', 'WatchEvent', 'CreateEvent'].includes(e.type)
-  ).slice(0, 8);
+  ).slice(0, 25);
 
   if (filteredEvents.length === 0) return null;
 
@@ -128,12 +128,14 @@ export function RecentActivity({ events }: RecentActivityProps) {
       <div className={`transition-all duration-300 ease-in-out origin-top overflow-hidden ${
         isExpanded ? "opacity-100 max-h-[800px]" : "opacity-0 max-h-0 pointer-events-none -mb-6"
       }`}>
-        <div className="space-y-6 relative flex-1 before:absolute before:inset-y-0 before:left-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200/60 dark:before:via-zinc-800/40 before:to-transparent pt-2">
-          {filteredEvents.map((event) => (
-            <div key={event.id} className="relative flex items-start gap-4">
-              {renderEvent(event)}
-            </div>
-          ))}
+        <div className="overflow-y-auto pr-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-200/80 dark:scrollbar-thumb-zinc-800/80 max-h-[320px] xl:max-h-[265px] pt-2">
+          <div className="space-y-6 relative flex-1 before:absolute before:inset-y-0 before:left-4 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200/60 dark:before:via-zinc-800/40 before:to-transparent pb-2">
+            {filteredEvents.map((event) => (
+              <div key={event.id} className="relative flex items-start gap-4">
+                {renderEvent(event)}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

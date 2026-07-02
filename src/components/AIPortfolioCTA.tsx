@@ -34,15 +34,15 @@ export function AIPortfolioCTA({ user, repos, readme, orgs, socials, events }: A
       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
       <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-300 dark:to-blue-400 bg-clip-text flex items-center gap-2 mb-1.5">
-            <Bot className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <h3 className="text-lg font-bold text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-zinc-100 dark:to-slate-300 bg-clip-text flex items-center gap-2 mb-1.5">
+            <Bot className="w-5 h-5 text-indigo-600 dark:text-slate-350" />
             Export for AI Portfolio
           </h3>
           <p className="text-sm text-zinc-600 dark:text-zinc-300 max-w-2xl leading-relaxed mb-3.5">
             Copy a structured Markdown summary you can paste into ChatGPT, Claude, Cursor, v0, Bolt, or Lovable to generate a portfolio website or resume content.
           </p>
-          <div className="flex items-start gap-2.5 text-xs bg-indigo-500/5 dark:bg-indigo-950/10 border border-indigo-500/20 dark:border-indigo-900/20 p-3.5 rounded-2xl max-w-2xl mb-4 text-indigo-800 dark:text-indigo-300 backdrop-blur-sm">
-            <ShieldAlert className="w-4 h-4 shrink-0 text-indigo-600 dark:text-indigo-400 mt-0.5" />
+          <div className="flex items-start gap-2.5 text-xs bg-indigo-500/5 dark:bg-zinc-900/10 border border-indigo-500/20 dark:border-zinc-800/40 p-3.5 rounded-2xl max-w-2xl mb-4 text-indigo-800 dark:text-zinc-350 backdrop-blur-sm">
+            <ShieldAlert className="w-4 h-4 shrink-0 text-indigo-600 dark:text-slate-350 mt-0.5" />
             <p className="leading-relaxed">If you used a GitHub token, this export may include private repository metadata. Review before pasting into any AI tool.</p>
           </div>
           

@@ -11,6 +11,7 @@ export interface MarkdownExportOptions {
   includeLanguages: boolean;
   includeActivity: boolean;
   includePrivateRepos: boolean;
+  includeRepoReadmes: boolean;
 }
 
 export function generateMarkdown(
@@ -29,7 +30,9 @@ export function generateMarkdown(
     includeLanguages: true,
     includeActivity: true,
     includePrivateRepos: false,
-  }
+    includeRepoReadmes: false,
+  },
+  repoReadmes?: Record<string, string | null>
 ): string {
   let md = `# ${user.name || user.login} (@${user.login})\n\n`;
 
@@ -154,6 +157,11 @@ export function generateMarkdown(
         if (repo.topics && repo.topics.length > 0) {
           md += `- **Topics:** ${repo.topics.map(t => '\`' + t + '\`').join(', ')}\n`;
         }
+        
+        if (options.includeRepoReadmes && repoReadmes && repoReadmes[repo.name]) {
+          md += `\n<details>\n<summary>View Repository README</summary>\n\n${repoReadmes[repo.name]}\n\n</details>\n`;
+        }
+        
         md += `\n`;
       });
     }

@@ -189,7 +189,7 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
     return (
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 dark:bg-blue-650 dark:hover:bg-blue-600 hover:shadow-blue-550/20 dark:hover:shadow-blue-550/40 transition-all hover:scale-105 z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 flex items-center justify-center group cursor-pointer"
+        className="fixed bottom-6 right-6 p-4 rounded-full bg-blue-600 text-white shadow-xl hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 hover:shadow-blue-500/20 dark:hover:shadow-blue-500/40 transition-all hover:scale-105 z-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 flex items-center justify-center group cursor-pointer"
         aria-label="Open AI Assistant"
       >
         <MessageSquare className="w-6 h-6 group-hover:scale-110 transition-transform" />
@@ -208,7 +208,7 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
            style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))', paddingBottom: '1rem', paddingLeft: '1rem', paddingRight: '1rem' }}
            onClick={() => setIsMinimized(!isMinimized)}>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-blue-650 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -269,10 +269,10 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
                     type="password"
                     value={config.apiKey}
                     onChange={(e) => setConfig({ ...config, apiKey: e.target.value })}
-                    className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-650"
+                    className="w-full p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500"
                     placeholder={`Enter ${PROVIDER_NAMES[config.provider]} key...`}
                   />
-                  <div className="mt-2 bg-amber-50/75 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 p-2.5 rounded text-xs text-amber-805 dark:text-amber-300">
+                  <div className="mt-2 bg-amber-50/75 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/30 p-2.5 rounded text-xs text-amber-800 dark:text-amber-300">
                     <p className="font-bold mb-1">Security Warning:</p>
                     <p>API keys are stored locally in your browser and sent securely only to our backend proxy. We do not store or log your API keys on our servers. Avoid using this feature on public or shared devices.</p>
                   </div>
@@ -288,7 +288,7 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
                     type="text"
                     value={config.baseUrl}
                     onChange={(e) => setConfig({ ...config, baseUrl: e.target.value })}
-                    className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-650"
+                    className="w-full p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500"
                     placeholder="http://localhost:11434"
                   />
                 </div>
@@ -300,13 +300,13 @@ Answer the user's questions accurately based ONLY on this profile data. Be helpf
                   type="text"
                   value={config.model}
                   onChange={(e) => setConfig({ ...config, model: e.target.value })}
-                  className="w-full p-2 border border-zinc-250 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-650"
+                  className="w-full p-2 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-500"
                 />
               </div>
 
               <div className="bg-blue-50/80 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/30 p-3 rounded-lg text-sm text-blue-805 dark:text-blue-300">
                 <p className="font-semibold mb-1">Provider Note</p>
-                <p className="text-blue-750 dark:text-blue-400/90">{PROVIDER_NOTES[config.provider]}</p>
+                <p className="text-blue-700 dark:text-blue-400/90">{PROVIDER_NOTES[config.provider]}</p>
               </div>
             </div>
           </div>

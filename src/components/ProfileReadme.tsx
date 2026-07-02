@@ -17,6 +17,9 @@ export function ProfileReadme({ content }: ProfileReadmeProps) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 w-full">
         <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
           Profile README
+          <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 border border-zinc-200/50 dark:border-zinc-800/40 px-2 py-0.5 rounded-lg flex items-center gap-1 shrink-0">
+            ⚡ {Math.max(1, Math.ceil(content.split(/\s+/).filter(Boolean).length / 200))} min read
+          </span>
         </h2>
         
         <div className="flex items-center gap-3 ml-auto sm:ml-0">
@@ -49,7 +52,7 @@ export function ProfileReadme({ content }: ProfileReadmeProps) {
           
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 border border-indigo-200/50 dark:border-zinc-800/80 rounded-xl bg-white/70 dark:bg-zinc-900/30 text-zinc-505 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-650"
+            className="p-1.5 border border-indigo-200/50 dark:border-zinc-800/80 rounded-xl bg-white/70 dark:bg-zinc-900/30 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-650"
             title={isExpanded ? "Collapse Section" : "Expand Section"}
             aria-label={isExpanded ? "Collapse Profile README" : "Expand Profile README"}
           >
@@ -58,8 +61,8 @@ export function ProfileReadme({ content }: ProfileReadmeProps) {
         </div>
       </div>
 
-      <div className={`transition-all duration-300 ease-in-out origin-top overflow-hidden ${
-        isExpanded ? "opacity-100 max-h-[2000px]" : "opacity-0 max-h-0 pointer-events-none -mb-8"
+      <div className={`transition-all duration-300 ease-in-out origin-top ${
+        isExpanded ? "opacity-100 max-h-none" : "opacity-0 max-h-0 overflow-hidden pointer-events-none -mb-8"
       }`}>
         <div className="pt-2">
           {viewMode === 'preview' ? (

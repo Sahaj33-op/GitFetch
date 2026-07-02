@@ -1,15 +1,35 @@
 import React, { useState, useMemo } from 'react';
 import { GitHubRepo } from '../lib/github';
 import { filterAndSortRepos } from '../lib/githubUtils';
-import { Star, GitFork, Book, Search } from 'lucide-react';
+import { Star, GitFork, Book, Search, ExternalLink } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+
+export const LANGUAGE_COLORS: Record<string, string> = {
+  TypeScript: '#3178c6',
+  JavaScript: '#f1e05a',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+  Python: '#3572A5',
+  Go: '#00ADD8',
+  Rust: '#dea584',
+  Java: '#b07219',
+  'C++': '#f34b7d',
+  'C#': '#178600',
+  Ruby: '#701516',
+  Swift: '#F05138',
+  Shell: '#89e051',
+  PHP: '#4F5D95',
+  Kotlin: '#A97BFF',
+  Dart: '#00B4AB',
+};
 
 interface RepoListProps {
   repos: GitHubRepo[];
   username: string;
+  onSelectRepo: (repo: GitHubRepo) => void;
 }
 
-export function RepoList({ repos, username }: RepoListProps) {
+export function RepoList({ repos, username, onSelectRepo }: RepoListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'stars' | 'updated'>('stars');
   const [repoType, setRepoType] = useState<'all' | 'personal' | 'org'>('all');
@@ -65,16 +85,26 @@ export function RepoList({ repos, username }: RepoListProps) {
             <option value="private">Private</option>
           </select>
 
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="px-3.5 py-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/90 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md"
-          >
-            <option value="all">All Languages</option>
-            {availableLanguages.map(lang => (
-              <option key={lang} value={lang}>{lang}</option>
-            ))}
-          </select>
+          <div className="relative flex items-center shrink-0">
+            {language !== 'all' && (
+              <span 
+                className="absolute left-3.5 w-2.5 h-2.5 rounded-full z-10 transition-all shadow-sm" 
+                style={{ backgroundColor: LANGUAGE_COLORS[language] || '#9ca3af' }}
+              />
+            )}
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className={`py-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl text-sm font-semibold bg-white/90 dark:bg-zinc-900/40 text-zinc-700 dark:text-zinc-300 hover:border-indigo-300 dark:hover:border-zinc-700 focus:ring-2 focus:ring-indigo-400/20 focus:border-indigo-400 outline-none cursor-pointer transition-all shadow-sm backdrop-blur-md ${
+                language !== 'all' ? 'pl-8 pr-3.5' : 'px-3.5'
+              }`}
+            >
+              <option value="all">All Languages</option>
+              {availableLanguages.map(lang => (
+                <option key={lang} value={lang}>{lang}</option>
+              ))}
+            </select>
+          </div>
 
           <div className="relative flex-grow sm:flex-grow-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 w-4 h-4" />
@@ -102,12 +132,27 @@ export function RepoList({ repos, username }: RepoListProps) {
         {filteredAndSortedRepos.map(repo => (
           <div key={repo.id} className="glass-panel rounded-3xl p-6 flex flex-col h-full group relative overflow-hidden">
             <div className="flex justify-between items-start gap-4 mb-3">
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
-                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 cursor-pointer">
-                  <Book className="w-5 h-5 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors flex-shrink-0" />
-                  <span className="truncate">{repo.name}</span>
+              <div className="flex items-center gap-2 truncate">
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-slate-350 transition-colors truncate">
+                  <button 
+                    onClick={() => onSelectRepo(repo)} 
+                    className="flex items-center gap-2 cursor-pointer text-left hover:underline focus:outline-none w-full"
+                  >
+                    <Book className="w-5 h-5 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-500 dark:group-hover:text-slate-350 transition-colors flex-shrink-0" />
+                    <span className="truncate">{repo.name}</span>
+                  </button>
+                </h3>
+                <a 
+                  href={repo.html_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-zinc-400 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-200 p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all shrink-0 focus-visible:outline-none"
+                  title="Open on GitHub"
+                  aria-label={`Open ${repo.name} on GitHub`}
+                >
+                  <ExternalLink className="w-4 h-4" />
                 </a>
-              </h3>
+              </div>
               <div className="flex flex-col items-end gap-1 shrink-0">
                 <div className="flex gap-1">
                   {repo.private && (

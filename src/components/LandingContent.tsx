@@ -6,7 +6,7 @@ export function LandingContent() {
     <div className="space-y-24 py-12">
       {/* Hero Section */}
       <section className="text-center max-w-3xl mx-auto px-4">
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-white dark:via-zinc-300 dark:to-zinc-500 bg-clip-text text-transparent">
           Extract Any GitHub Profile
         </h1>
         <p className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-300 mb-8 leading-relaxed">

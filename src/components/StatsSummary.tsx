@@ -31,11 +31,11 @@ export function StatsSummary({ repos }: StatsSummaryProps) {
       </div>
 
       {/* Forks Card */}
-      <div className="glass-panel p-5 rounded-3xl bg-gradient-to-br from-blue-500/5 to-cyan-500/3 dark:from-blue-500/5 dark:to-cyan-500/2 relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/5 dark:hover:shadow-blue-500/10 transition-all duration-300">
-        <div className="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 dark:bg-blue-500/15 rounded-full transition-transform duration-500 group-hover:scale-150 blur-md"></div>
+      <div className="glass-panel p-5 rounded-3xl bg-gradient-to-br from-blue-500/5 to-cyan-500/3 dark:from-slate-500/5 dark:to-zinc-500/2 relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/5 dark:hover:shadow-slate-500/10 transition-all duration-300">
+        <div className="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 dark:bg-slate-500/15 rounded-full transition-transform duration-500 group-hover:scale-150 blur-md"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-blue-100/50 dark:bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400 transition-colors">
+            <div className="p-2 bg-blue-100/50 dark:bg-slate-500/10 rounded-xl text-blue-600 dark:text-slate-400 transition-colors">
               <GitFork className="w-5 h-5" />
             </div>
             <span className="text-xs font-bold tracking-wider text-zinc-400 dark:text-zinc-400 uppercase">Total Forks</span>
@@ -45,11 +45,11 @@ export function StatsSummary({ repos }: StatsSummaryProps) {
       </div>
 
       {/* Source Repos Card */}
-      <div className="glass-panel p-5 rounded-3xl bg-gradient-to-br from-purple-500/5 to-pink-500/3 dark:from-purple-500/5 dark:to-pink-500/2 relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/5 dark:hover:shadow-purple-500/10 transition-all duration-300">
-        <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/10 dark:bg-purple-500/15 rounded-full transition-transform duration-500 group-hover:scale-150 blur-md"></div>
+      <div className="glass-panel p-5 rounded-3xl bg-gradient-to-br from-purple-500/5 to-pink-500/3 dark:from-teal-500/5 dark:to-cyan-500/2 relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/5 dark:hover:shadow-teal-500/10 transition-all duration-300">
+        <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/10 dark:bg-teal-500/15 rounded-full transition-transform duration-500 group-hover:scale-150 blur-md"></div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-purple-100/50 dark:bg-purple-500/10 rounded-xl text-purple-600 dark:text-purple-400 transition-colors">
+            <div className="p-2 bg-purple-100/50 dark:bg-teal-500/10 rounded-xl text-purple-600 dark:text-teal-400 transition-colors">
               <Code2 className="w-5 h-5" />
             </div>
             <span className="text-xs font-bold tracking-wider text-zinc-400 dark:text-zinc-400 uppercase">Source Repos</span>

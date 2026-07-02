@@ -13,6 +13,8 @@ import { Chatbot } from './components/Chatbot';
 import { AIPortfolioCTA } from './components/AIPortfolioCTA';
 import { generateMarkdown, downloadMarkdown, MarkdownExportOptions } from './lib/markdownExport';
 import { useGitHubProfile } from './hooks/useGitHubProfile';
+import { fetchRepoReadme, fetchRateLimit, RateLimit } from './lib/github';
+import { RepoDetail } from './components/RepoDetail';
 
 import { LandingContent } from './components/LandingContent';
 
@@ -57,7 +59,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
         </button>
         <button 
           type="submit" 
-          className="md:hidden flex flex-shrink-0 items-center justify-center px-4 bg-gradient-to-r from-blue-600 to-indigo-650 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
+          className="md:hidden flex flex-shrink-0 items-center justify-center px-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
           aria-label="Extract Profile"
         >
           <Search className="w-5 h-5" />
@@ -92,7 +94,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
         </div>
         
         {/* Mobile token note */}
-        <div className="md:hidden text-xs text-zinc-550 dark:text-zinc-400 bg-amber-50/50 dark:bg-amber-950/15 border border-amber-200/50 dark:border-amber-900/30 p-3 rounded-lg w-full">
+        <div className="md:hidden text-xs text-zinc-500 dark:text-zinc-400 bg-amber-50/50 dark:bg-amber-950/15 border border-amber-200/50 dark:border-amber-900/30 p-3 rounded-lg w-full">
           <p className="font-bold text-amber-800 dark:text-amber-400 mb-1 text-sm">PAT Token (Optional)</p>
           <p className="mb-2">Increases rate limits & fetches private repos, orgs & contributions.</p>
           <p className="font-semibold text-amber-700 dark:text-amber-500 mb-2">Note: A 7-day PAT token with <code className="bg-amber-500/20 px-1 rounded font-mono text-[10px]">read:org</code> scope is needed to fetch some organizations.</p>
@@ -101,7 +103,7 @@ function SearchForm({ onSearch, initialValue = '' }: { onSearch: (username: stri
         
         <button 
           type="submit" 
-          className="hidden md:flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-650 hover:from-blue-500 hover:to-indigo-550 active:scale-[0.97] text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 dark:shadow-blue-400/10 hover:shadow-lg hover:shadow-blue-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 cursor-pointer font-bold"
+          className="hidden md:flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 active:scale-[0.97] text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 dark:shadow-blue-400/10 hover:shadow-lg hover:shadow-blue-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 cursor-pointer font-bold"
         >
           <span className="text-sm">Extract</span>
         </button>
@@ -122,6 +124,9 @@ export default function App() {
   const [searchParams, setSearchParams] = useState(getInitialParams());
   const [copied, setCopied] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [selectedRepoName, setSelectedRepoName] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [rateLimit, setRateLimit] = useState<RateLimit | null>(null);
   
   // Theme Management
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -151,22 +156,70 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  useEffect(() => {
+    async function updateRateLimit() {
+      const limitInfo = await fetchRateLimit(searchParams.token);
+      setRateLimit(limitInfo);
+    }
+    updateRateLimit();
+    const interval = setInterval(updateRateLimit, 60000);
+    return () => clearInterval(interval);
+  }, [searchParams.token, searchParams.username]);
+
+  const fetchExportRepoReadmes = async (options: MarkdownExportOptions): Promise<Record<string, string | null>> => {
+    const repoReadmes: Record<string, string | null> = {};
+    if (!options.includeRepoReadmes || !repos) return repoReadmes;
+    
+    let sourceRepos = options.excludeForks ? repos.filter(r => !r.fork) : repos;
+    if (!options.includePrivateRepos) {
+      sourceRepos = sourceRepos.filter(r => !r.private);
+    }
+    
+    const reposToFetch = [...sourceRepos]
+      .sort((a, b) => b.stargazers_count - a.stargazers_count)
+      .slice(0, 20);
+
+    setIsExporting(true);
+    try {
+      await Promise.all(
+        reposToFetch.map(async (repo) => {
+          try {
+            const readmeText = await fetchRepoReadme(repo.owner.login, repo.name, searchParams.token);
+            repoReadmes[repo.name] = readmeText;
+          } catch (e) {
+            repoReadmes[repo.name] = null;
+          }
+        })
+      );
+    } catch (e) {
+      // ignore
+    } finally {
+      setIsExporting(false);
+      const limitInfo = await fetchRateLimit(searchParams.token);
+      setRateLimit(limitInfo);
+    }
+    return repoReadmes;
+  };
+
   const handleCopyMarkdown = async (options: MarkdownExportOptions) => {
     if (!user) return;
-    const md = generateMarkdown(user, repos, readme, orgs, socials, events, options);
+    const repoReadmes = await fetchExportRepoReadmes(options);
+    const md = generateMarkdown(user, repos, readme, orgs, socials, events, options, repoReadmes);
     await navigator.clipboard.writeText(md);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownloadMarkdown = (options: MarkdownExportOptions) => {
+  const handleDownloadMarkdown = async (options: MarkdownExportOptions) => {
     if (!user) return;
-    const md = generateMarkdown(user, repos, readme, orgs, socials, events, options);
+    const repoReadmes = await fetchExportRepoReadmes(options);
+    const md = generateMarkdown(user, repos, readme, orgs, socials, events, options, repoReadmes);
     downloadMarkdown(md, `${user.login}-profile.md`);
   };
 
   const handleSearch = (username: string, token: string) => {
     setSearchParams({ username, token });
+    setSelectedRepoName(null);
     const url = new URL(window.location.href);
     if (username) {
       url.searchParams.set('username', username);
@@ -178,6 +231,7 @@ export default function App() {
 
   const handleGoHome = () => {
     setSearchParams({ username: '', token: '' });
+    setSelectedRepoName(null);
     const url = new URL(window.location.href);
     url.searchParams.delete('username');
     window.history.pushState({}, '', url);
@@ -208,13 +262,24 @@ export default function App() {
   } : null;
 
   return (
-    <div className="relative overflow-x-hidden min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-indigo-200 dark:selection:bg-blue-900/50 transition-colors duration-300">
-      {/* Ambient glassmorphic glowing mesh circles (Viewport locked for premium scrolling warp) */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[-10%] left-[-10%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-gradient-to-br from-blue-400/40 to-cyan-400/25 dark:from-blue-600/12 dark:to-cyan-600/8 rounded-full blur-[120px] animate-glow-1" />
-        <div className="absolute top-[35%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-violet-400/35 to-pink-400/22 dark:from-purple-600/10 dark:to-pink-600/6 rounded-full blur-[100px] animate-glow-2" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[50vw] h-[50vw] max-w-[750px] max-h-[750px] bg-gradient-to-br from-indigo-400/40 to-purple-400/25 dark:from-indigo-600/12 dark:to-blue-600/8 rounded-full blur-[130px] pointer-events-none animate-glow-3" />
-        <div className="absolute top-[60%] left-[-5%] w-[30vw] h-[30vw] max-w-[400px] max-h-[400px] bg-gradient-to-br from-fuchsia-400/20 to-rose-400/12 dark:from-fuchsia-600/6 dark:to-rose-600/4 rounded-full blur-[90px] pointer-events-none animate-glow-2" />
+    <div className="relative overflow-x-clip min-h-screen bg-transparent text-zinc-900 dark:text-zinc-100 font-sans selection:bg-indigo-200 dark:selection:bg-blue-900/50 transition-colors duration-300">
+      {/* Fixed static background elements (Prevents document-level scroll repaints) */}
+      <div className="fixed inset-0 pointer-events-none -z-20 transition-colors duration-300 bg-[#eef0ff] dark:bg-[#030712] transform-gpu">
+        {/* Light Mode: Multi-stop linear gradient & subtle indigo dot grid */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#f0f4ff] via-[#e8eeff] to-[#fce7f3] opacity-100 dark:opacity-0 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(99,102,241,0.05)_1.5px,transparent_1.5px)] dark:hidden bg-[size:24px_24px]" />
+        
+        {/* Dark Mode: Dual-size silver/zinc radial dot grid */}
+        <div className="absolute inset-0 hidden dark:block bg-[radial-gradient(rgba(148,163,184,0.03)_1.5px,transparent_1.5px)] bg-[size:24px_24px]" />
+        <div className="absolute inset-0 hidden dark:block bg-[radial-gradient(rgba(244,244,245,0.015)_1px,transparent_1px)] bg-[size:12px_12px]" />
+      </div>
+
+      {/* Ambient glassmorphic glowing mesh circles (Viewport locked with GPU layer cache caching) */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 transform-gpu will-change-transform">
+        <div className="absolute top-[-10%] left-[-10%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-gradient-to-br from-blue-400/25 to-cyan-400/15 dark:from-slate-650/8 dark:to-zinc-700/4 rounded-full blur-[100px] animate-glow-1 will-change-transform" style={{ backfaceVisibility: 'hidden' } as React.CSSProperties} />
+        <div className="absolute top-[35%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-violet-400/20 to-pink-400/12 dark:from-zinc-750/6 dark:to-slate-850/3 rounded-full blur-[90px] animate-glow-2 will-change-transform" style={{ backfaceVisibility: 'hidden' } as React.CSSProperties} />
+        <div className="absolute bottom-[-10%] left-[20%] w-[50vw] h-[50vw] max-w-[750px] max-h-[750px] bg-gradient-to-br from-indigo-400/25 to-purple-400/15 dark:from-slate-700/8 dark:to-zinc-800/4 rounded-full blur-[110px] pointer-events-none animate-glow-3 will-change-transform" style={{ backfaceVisibility: 'hidden' } as React.CSSProperties} />
+        <div className="absolute top-[60%] left-[-5%] w-[30vw] h-[30vw] max-w-[400px] max-h-[400px] bg-gradient-to-br from-fuchsia-400/12 to-rose-400/8 dark:from-zinc-800/4 dark:to-slate-900/2 rounded-full blur-[80px] pointer-events-none animate-glow-2 will-change-transform" style={{ backfaceVisibility: 'hidden' } as React.CSSProperties} />
       </div>
 
       <Helmet>
@@ -255,11 +320,35 @@ export default function App() {
             <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
               <SearchForm onSearch={handleSearch} initialValue={searchParams.username} />
               
+              {rateLimit && (
+                <div 
+                  className="group relative flex items-center gap-1.5 px-3 py-2 border border-zinc-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-350 cursor-default select-none text-xs font-bold shadow-sm backdrop-blur-md shrink-0"
+                >
+                  <span className={`w-2 h-2 rounded-full ${
+                    rateLimit.remaining > 20 
+                      ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' 
+                      : rateLimit.remaining > 5 
+                        ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' 
+                        : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]'
+                  }`}></span>
+                  <span>API: {rateLimit.remaining}/{rateLimit.limit}</span>
+                  
+                  {/* Tooltip on hover */}
+                  <div className="absolute top-[calc(100%+0.5rem)] right-0 w-64 p-3 bg-white/95 dark:bg-zinc-950/95 border border-zinc-200/60 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 text-[11px] rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 shadow-xl leading-relaxed">
+                    <p className="font-bold mb-0.5 text-xs text-zinc-900 dark:text-zinc-50">GitHub API Rate Limit</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">Core endpoints remaining. Resets at <strong className="text-zinc-700 dark:text-zinc-200">{new Date(rateLimit.reset * 1000).toLocaleTimeString()}</strong>.</p>
+                    {rateLimit.limit === 60 && (
+                      <p className="mt-1.5 text-amber-600 dark:text-amber-400 font-semibold">Tip: Supply a Personal Access Token (PAT) in the search options to increase limit to 5,000/hr.</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
               <a
                 href="https://github.com/Sahaj33-op/GitFetch.git"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-650 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
+                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
                 title="View GitHub Repository"
                 aria-label="View GitHub Repository"
               >
@@ -268,7 +357,7 @@ export default function App() {
 
               <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-650 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
+                className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"
                 aria-label="Toggle Dark Mode"
               >
                 {theme === 'light' ? <Moon className="w-5 h-5 md:w-4.5 md:h-4.5" /> : <Sun className="w-5 h-5 md:w-4.5 md:h-4.5" />}
@@ -341,43 +430,57 @@ export default function App() {
 
             {/* Main Content */}
             <div className="w-full lg:w-2/3 xl:w-3/4 space-y-8 min-w-0">
-              <div className="flex justify-between items-center glass-panel p-4 rounded-xl">
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-200">Dashboard Overview</h2>
-                <button
-                  onClick={() => setShowExportModal(true)}
-                  aria-label="Export profile to markdown"
-                  className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-lg transition-colors text-sm font-medium shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export Markdown
-                </button>
-              </div>
+              {selectedRepoName && repos.find(r => r.name === selectedRepoName) ? (
+                <RepoDetail 
+                  repo={repos.find(r => r.name === selectedRepoName)!} 
+                  token={searchParams.token}
+                  onBack={() => setSelectedRepoName(null)}
+                />
+              ) : (
+                <>
+                  <div className="flex justify-between items-center glass-panel p-4 rounded-xl">
+                    <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-200">Dashboard Overview</h2>
+                    <button
+                      onClick={() => setShowExportModal(true)}
+                      aria-label="Export profile to markdown"
+                      className="flex items-center gap-2 px-4 py-2 bg-zinc-950 hover:bg-zinc-850 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-950 rounded-lg transition-colors text-sm font-semibold shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Export Markdown
+                    </button>
+                  </div>
 
-              <AIPortfolioCTA 
-                user={user} 
-                repos={repos} 
-                readme={readme} 
-                orgs={orgs} 
-                socials={socials} 
-                events={events} 
-              />
+                  <AIPortfolioCTA 
+                    user={user} 
+                    repos={repos} 
+                    readme={readme} 
+                    orgs={orgs} 
+                    socials={socials} 
+                    events={events} 
+                  />
 
-              <StatsSummary repos={repos} />
+                  <StatsSummary repos={repos} />
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <TopLanguages repos={repos} />
-                <RecentActivity events={events} />
-              </div>
-              
-              <div className="block lg:hidden">
-                {orgs.length > 0 && <Organizations orgs={orgs} />}
-              </div>
-              
-              {readme && (
-                <ProfileReadme content={readme} />
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <TopLanguages repos={repos} />
+                    <RecentActivity events={events} />
+                  </div>
+                  
+                  <div className="block lg:hidden">
+                    {orgs.length > 0 && <Organizations orgs={orgs} />}
+                  </div>
+                  
+                  {readme && (
+                    <ProfileReadme content={readme} />
+                  )}
+                  
+                  <RepoList 
+                    repos={repos} 
+                    username={user.login} 
+                    onSelectRepo={(repo) => setSelectedRepoName(repo.name)} 
+                  />
+                </>
               )}
-              
-              <RepoList repos={repos} username={user.login} />
             </div>
           </div>
         )}
@@ -392,6 +495,13 @@ export default function App() {
       />
       {user && !loading && (
         <Chatbot profileData={{ user, repos, readme, events, orgs }} />
+      )}
+      {isExporting && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950/70 backdrop-blur-md animate-in fade-in duration-200">
+          <Loader2 className="w-12 h-12 text-zinc-400 dark:text-zinc-150 animate-spin mb-4" />
+          <p className="text-zinc-205 dark:text-zinc-100 font-bold text-lg animate-pulse">Fetching Repository READMEs...</p>
+          <p className="text-zinc-400 dark:text-zinc-400 text-sm mt-1">This may take a few seconds to retrieve from GitHub.</p>
+        </div>
       )}
     </div>
   );

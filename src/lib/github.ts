@@ -194,6 +194,26 @@ export async function fetchUserReadme(username: string, token?: string): Promise
   }
 }
 
+export async function fetchRepoReadme(owner: string, repoName: string, token?: string): Promise<string | null> {
+  try {
+    const headers = getHeaders(token);
+    headers.Accept = 'application/vnd.github.v3.raw';
+    
+    const res = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repoName}/readme`, {
+      headers,
+      cache: 'no-store',
+    });
+    
+    if (!res.ok) {
+      return null;
+    }
+    
+    return await res.text();
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function fetchOrgs(username: string, token?: string, isAuth?: boolean): Promise<GitHubOrg[]> {
   const endpoint = isAuth ? '/user/orgs' : `/users/${username}/orgs`;
   const res = await fetch(`${GITHUB_API_BASE}${endpoint}`, { 
@@ -227,5 +247,26 @@ export async function fetchOrgRepos(orgLogin: string, token?: string): Promise<G
     throw new Error(`${res.status} - ${msg}`);
   }
   return res.json();
+}
+
+export interface RateLimit {
+  limit: number;
+  remaining: number;
+  reset: number;
+}
+
+export async function fetchRateLimit(token?: string): Promise<RateLimit | null> {
+  try {
+    const headers = getHeaders(token);
+    const res = await fetch(`${GITHUB_API_BASE}/rate_limit`, {
+      headers,
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.resources.core;
+  } catch (e) {
+    return null;
+  }
 }
 
