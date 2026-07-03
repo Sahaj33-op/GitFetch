@@ -345,7 +345,7 @@ export default function App() {
               )}
               
               <a
-                href="https://github.com/Sahaj33-op/GitFetch.git"
+                href="https://github.com/sizwinz/GitFetch.git"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2.5 md:p-2.5 border border-indigo-200/60 dark:border-zinc-800/80 rounded-xl bg-white/90 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-800/80 hover:scale-[1.03] active:scale-[0.97] transition-all text-zinc-600 dark:text-zinc-300 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:focus-visible:ring-zinc-600 shadow-sm"

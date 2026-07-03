@@ -170,7 +170,7 @@ The Express backend proxies chat requests to supported AI providers so the front
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Sahaj33-op/GitFetch.git
+git clone https://github.com/sizwinz/GitFetch.git
 cd GitFetch
 ```
 

@@ -2,7 +2,7 @@
 
 Welcome to the official developer documentation for **GitFetch** (GitHub Profile Extractor). This document outlines the technical architecture, design system, core features, and setup guidelines for developers looking to extend or self-host the application.
 
-- **GitHub Repository**: [https://github.com/Sahaj33-op/GitFetch.git](https://github.com/Sahaj33-op/GitFetch.git)
+- **GitHub Repository**: [https://github.com/sizwinz/GitFetch.git](https://github.com/sizwinz/GitFetch.git)
 - **Live Deployment**: [https://gitfetch-sahaj33.vercel.app/](https://gitfetch-sahaj33.vercel.app/)
 
 ---
@@ -90,5 +90,5 @@ GitFetch/
 ---
 
 <div align="center">
-  <sub>Developed with passion for open-source developers. Code hosted at <a href="https://github.com/Sahaj33-op/GitFetch.git">github.com/Sahaj33-op/GitFetch</a></sub>
+  <sub>Developed with passion for open-source developers. Code hosted at <a href="https://github.com/sizwinz/GitFetch.git">github.com/sizwinz/GitFetch</a></sub>
 </div>
